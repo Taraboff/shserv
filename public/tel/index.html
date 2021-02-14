@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <main>
+        <!-- <todo-view></todo-view> -->
+    </main>
+    <div id="wrapper">
+
+        <!-- <phone-book id="fb">
+
+        </phone-book> -->
+
+        <div class="mainform">
+            <div class="caption">Мой телефонный справочник</div>
+
+            <form action="update.php" method="POST" id="form">
+                <input type="text" name="fio" id="fio" value="" placeholder="Название контакта" autocomplete="off">
+                <input type="text" name="phone" id="phone" value="" placeholder="Номер телефона" autocomplete="off">
+                <input type="text" name="description" id="description" value="" placeholder="Примечание"
+                autocomplete="off">
+                <div class="buttons">
+                    <input type="hidden" name="timestamp" id="timestamp">
+                    <input type="submit" value="Сохранить" id="button" class="button">
+                    <button type="button" class="button del">Удалить</button>
+                </div>
+                <a href="#" id="savetoserver">Сохранить на сервере</a>
+            </form>
+            <button type="button" class="button clear" data-tooltip="Создать новый">➕</button>
+            <div id="status"></div>
+            <div class="devinfo"></div>
+        </div> 
+         <table id="main">
+            <thead>
+                <tr>
+                    <th>Наименование (Ф.И.О.)</th>
+                    <th>Номер телефона</th>
+                    <th>Примечания</th>
+                </tr>
+            </thead>
+            <tbody id="tb"></tbody>
+        </table>
+
+
+<!--
+    </div>
+
+    <template id="contactrow">
+        <tr data-timestamp="">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </template> -->
+
+    <script src="index.bundled.js"></script>
+</body>
+
+</html>
