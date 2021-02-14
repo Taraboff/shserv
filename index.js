@@ -8,12 +8,12 @@ const jsonParser = express.json();
 
 app.use('/tel', express.static(__dirname + '/public' + '/tel'));
 app.use('/lean', express.static(__dirname + '/public' + '/lean'));
-
+app.disable('X-Powered-By');
 // app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.status(200);
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    res.status(200);
 });
 app.post('/sv', (req, res) => {
     // let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
