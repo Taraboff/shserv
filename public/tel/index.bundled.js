@@ -1587,7 +1587,7 @@ const repeat = directive((items, keyFnOrTemplate, template) => {
     };
 });
 
-const VERSION = '1.2.14';
+const VERSION = '1.2.16';
 const fio = document.querySelector('#fio');
 const phone = document.querySelector('#phone');
 const description = document.querySelector('#description');
@@ -1601,6 +1601,13 @@ const status = document.querySelector('#status');
 const dev = document.querySelector('.devinfo');
 const toserver = document.querySelector('#savetoserver');
 let tr, contacts, datas;
+const modal = document.getElementById('myModal');
+
+let myModal = new bootstrap.Modal(modal, {keyboard: true});
+ 
+modal.addEventListener('shown.bs.modal', function () {
+    fio.focus()
+  });
 
 function genTimeStamp(stamp) {
     const d = new Date();
@@ -1637,9 +1644,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.querySelector('#form').addEventListener('submit', (e) => {
+document.querySelector('#myModal').addEventListener('submit', (e) => {
     e.preventDefault();
     if (fio.value === '' || phone.value === '') return;    // проверка на пустое поле ввода
+    myModal.hide();
     getData({ fio: fio.value, phone: phone.value, desc: description.value, id: timestamp.value })
         .then((resultData) => {
             contacts = resultData;
@@ -1648,6 +1656,7 @@ document.querySelector('#form').addEventListener('submit', (e) => {
 });
 
 del.addEventListener('click', () => {
+    myModal.hide();
     getData({ id: timestamp.value, toDelete: true })
         .then((resultData) => {
             contacts = resultData;
@@ -1656,6 +1665,7 @@ del.addEventListener('click', () => {
 });
 
 newcontact.addEventListener('click', () => {
+    myModal.show();
     renderView('new');
 });
 
@@ -1681,15 +1691,19 @@ function renderView(newState, element) {
             fio.value = '';
             phone.value = '';
             description.value = '';
-            fio.focus();
             break;
 
         case 'edit':
             state.setState('edit');
             let row = element.closest('tr');
             if (!row || !row.hasAttribute('data-timestamp') || !table.contains(row)) return;
+
+            // $("#myModal").modal("show");
+            myModal.show();
+
             fio.value = row.cells[0].textContent;
-            fio.focus();
+            
+
             phone.value = row.cells[1].textContent;
             description.value = row.cells[2].textContent;
             timestamp.value = row.dataset.timestamp;

@@ -5,43 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты</title>
+    <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <script src="bootstrap.bundle.js"></script>
 </head>
 
 <body>
+    <div id="myModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование контакта</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>                
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="mb-3">
+                      <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="description" placeholder="Примечание" autocomplete="off">
+                    </div>
+                    
+                    <input type="hidden" name="timestamp" id="timestamp">
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary" >Сохранить</button>
+                    <button type="button" class="btn btn-primary del">Удалить</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <main>
-        <!-- <todo-view></todo-view> -->
-    </main>
     <div id="wrapper">
-
-        <!-- <phone-book id="fb">
-
-        </phone-book> -->
-
         <div class="mainform">
             <div class="caption">Мой телефонный справочник</div>
-
-            <form action="update.php" method="POST" id="form">
-                <input type="text" name="fio" id="fio" value="" placeholder="Название контакта" autocomplete="off">
-                <input type="text" name="phone" id="phone" value="" placeholder="Номер телефона" autocomplete="off">
-                <input type="text" name="description" id="description" value="" placeholder="Примечание"
-                autocomplete="off">
-                <div class="buttons">
-                    <input type="hidden" name="timestamp" id="timestamp">
-                    <input type="submit" value="Сохранить" id="button" class="button">
-                    <button type="button" class="button del">Удалить</button>
-                </div>
                 <a href="#" id="savetoserver">Сохранить на сервере</a>
             </form>
             <button type="button" class="button clear" data-tooltip="Создать новый">➕</button>
             <div id="status"></div>
             <div class="devinfo"></div>
-        </div> 
+        
+
          <table id="main">
             <thead>
                 <tr>
@@ -53,18 +64,7 @@
             <tbody id="tb"></tbody>
         </table>
 
-
-<!--
-    </div>
-
-    <template id="contactrow">
-        <tr data-timestamp="">
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </template> -->
-
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="index.bundled.js"></script>
 </body>
 
