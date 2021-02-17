@@ -4,6 +4,9 @@ body {
     font-family: 'Arial', sans-serif;
     font-size: 14px;
 }
+footer {
+    margin-bottom: 20px;
+}
 /* #wrapper {
     position: relative;
 } */
@@ -34,6 +37,10 @@ body {
     cursor: pointer;
     transition: 0.3s ease-out;
 } */
+.btn {
+    min-width: 120px;
+    margin-right: 20px;
+}
 .del {
     display: none;
 }

@@ -45,26 +45,29 @@
 
     <div id="wrapper">
         <div class="mainform">
-            <div class="caption">Мой телефонный справочник</div>
+            <div class="caption">Мой список контактов</div>
                 <a href="#" id="savetoserver">Сохранить на сервере</a>
             </form>
             <button type="button" class="button clear" data-tooltip="Создать новый">➕</button>
             <div id="status"></div>
-            <div class="devinfo"></div>
-        
+            
+            
+            <table id="main">
+                <thead>
+                    <tr>
+                        <th>Наименование (Ф.И.О.)</th>
+                        <th>Номер телефона</th>
+                        <th>Примечания</th>
+                    </tr>
+                </thead>
+                <tbody id="tb"></tbody>
+            </table>
+            
+            <footer>
+                <div class="devinfo d-flex justify-content-center"></div>
+            </footer>
 
-         <table id="main">
-            <thead>
-                <tr>
-                    <th>Наименование (Ф.И.О.)</th>
-                    <th>Номер телефона</th>
-                    <th>Примечания</th>
-                </tr>
-            </thead>
-            <tbody id="tb"></tbody>
-        </table>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
     <script src="index.bundled.js"></script>
 </body>
 

@@ -1587,7 +1587,7 @@ const repeat = directive((items, keyFnOrTemplate, template) => {
     };
 });
 
-const VERSION = '1.2.16';
+const VERSION = '1.2.17';
 const fio = document.querySelector('#fio');
 const phone = document.querySelector('#phone');
 const description = document.querySelector('#description');
@@ -1713,7 +1713,7 @@ function renderView(newState, element) {
     }
 
     status.textContent = `${state.current.status}`;
-    dev.textContent = `Версия: ${VERSION}`;
+    dev.textContent = `Версия: ${VERSION}. - Разработка и дизайн: Мячин В.А. - 2021 г.`;
     del.style.display = state.current.displayDelBtn ? 'inline-block' : 'none';
 
     
