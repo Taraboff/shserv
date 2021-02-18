@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             contacts = resultData;
             renderView('new');
     });
-    dev.textContent = `Версия: ${VERSION}.  Разработка и дизайн: Мячин В.А.  2021 г.`;
+    dev.textContent = `Версия: ${VERSION}`;
 });
 
 document.querySelector('#myModal').addEventListener('submit', (e) => {

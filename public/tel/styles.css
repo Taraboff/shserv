@@ -3,10 +3,12 @@ body {
     background-color: #f5f4f4;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
+    height: 100%;
 }
-footer {
+/* footer {
     margin-bottom: 20px;
-}
+} */
+
 /* #wrapper {
     position: relative;
 } */
@@ -44,7 +46,7 @@ footer {
 .del {
     display: none;
 }
-.clear {
+/* .clear {
     position: absolute;
     right: 140px;
     bottom: 100px;
@@ -58,7 +60,7 @@ footer {
     border-radius: 50%;
     font-weight: 800;
     opacity: 0.7;
-} 
+}  */
 /*
 .button:hover {
     background: #1d49aa;
@@ -134,6 +136,7 @@ tr:not([id="header"]):hover {
 } */
 tr > td:first-child::first-letter {
     color: #df275e;
+    padding-left: 20px;
 }
 /* .active {
     background-color: #d1e2dd;
