@@ -2,85 +2,111 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты</title>
-    <link rel="stylesheet" href="bootstrap.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <script src="bootstrap.bundle.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты</title>
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <script src="bootstrap.bundle.js"></script>
 </head>
 
 <body>
-    <div id="myModal" class="modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Редактирование контакта</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>                
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="mb-3">
-                      <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                      <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                      <input type="text" class="form-control" id="description" placeholder="Примечание" autocomplete="off">
-                    </div>
-                    
-                    <input type="hidden" name="timestamp" id="timestamp">
-                  </div>
-                  <div class="modal-footer d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary" >Сохранить</button>
-                    <button type="button" class="btn btn-primary del">Удалить</button>
-                  </div>
-                </form>
-            </div>
+  <div id="myModal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Редактирование контакта</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
-    </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off">
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off">
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="description" placeholder="Примечание" autocomplete="off">
+            </div>
 
-    <div id="wrapper">
-        <div class="mainform">
-          <nav>
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <input type="hidden" name="timestamp" id="timestamp">
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary btn-sm button">Сохранить</button>
+          <button type="button" class="btn btn-primary del button">Удалить</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="wrapper">
+    <div class="mainform">
+      <!-- <nav class="navbar navbar-light bg-light navbar-expand-lg">
+            <a class="navbar-brand nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Меню
             </a>
             
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Мои контакты</a></li>
               <li><a class="dropdown-item" href="#">Справочник РОРС</a></li>
               <li><a class="dropdown-item" href="#" id="savetoserver">Сохранить на сервере</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">О программе</a></li>
             </ul>
-          </nav>
-            <div class="caption">Мой список контактов</div>
-                
-            </form>
-            <button type="button" class="button clear" data-tooltip="Создать новый">➕</button>
-            <div id="status"></div>
-            
-            
-            <table id="main">
-                <thead>
-                    <tr>
-                        <th>Наименование (Ф.И.О.)</th>
-                        <th>Номер телефона</th>
-                        <th>Примечания</th>
-                    </tr>
-                </thead>
-                <tbody id="tb"></tbody>
-            </table>
-            
-            <footer>
-                <div class="devinfo d-flex justify-content-center"></div>
-            </footer>
+          </nav> -->
 
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
-    <script src="index.bundled.js"></script>
+      <nav class="navbar navbar-light bg-light navbar-expand-lg">
+        <div class="container-fluid navpanel">
+          <a href="#" class="navbar-brand">Мои контакты</a>
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav">
+
+              <li class="navbar-item">
+                <a href="#" class="nav-link newcontact">Новый</a>
+              </li>
+              <li class="navbar-item">
+                <a href="#" class="nav-link" id="savetoserver">Сохранить</a>
+              </li>
+              <!-- <li class="navbar-item">
+                      <a href="#" class="nav-link">РОРС</a>
+                  </li> -->
+              <li class="navbar-item">
+                <a href="#" class="nav-link">О программе</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+      </form>
+      <div class="alert alert-info" id="status"></div>
+
+
+      <table class="table" id="main">
+        <thead>
+          <tr>
+            <th>Наименование (Ф.И.О.)</th>
+            <th>Номер телефона</th>
+            <th>Примечания</th>
+          </tr>
+        </thead>
+        <tbody id="tb"></tbody>
+      </table>
+
+      <footer>
+        <div class="devinfo d-flex justify-content-center"></div>
+      </footer>
+
+      <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+      <script src="index.bundled.js"></script>
 </body>
 
 </html>
