@@ -1,4 +1,4 @@
-const VERSION = '1.2.18';
+const VERSION = '1.2.21';
 const fio = document.querySelector('#fio');
 const phone = document.querySelector('#phone');
 const description = document.querySelector('#description');
@@ -11,8 +11,9 @@ const tb = document.querySelector('#tb');
 const status = document.querySelector('#status');
 const dev = document.querySelector('.devinfo');
 const toserver = document.querySelector('#savetoserver');
-let tr, contacts, datas;
 const modal = document.getElementById('myModal');
+const capt = document.querySelector('.caption');
+let tr, contacts, datas;
 
 let myModal = new bootstrap.Modal(modal, {keyboard: true});
  
@@ -32,8 +33,12 @@ function genTimeStamp(stamp) {
 class PhoneBook {
     constructor() {
         this.states = {
-            new: { value: 'new', displayDelBtn: false, status: 'Для создания нового контакта выберите в меню команду "Новый"' },
-            edit: { value: 'edit', displayDelBtn: true, status: 'Изменение контакта' }
+            new: { value: 'new', displayDelBtn: false, 
+                    status: 'Для создания нового контакта выберите в меню команду "Новый"',
+                    caption: 'Новый контакт' },
+            edit: { value: 'edit', displayDelBtn: true, 
+                    status: 'Изменение контакта',
+                    caption: 'Редактирование контакта' }
         };
         this.current = this.states['new'];
     }
@@ -93,7 +98,7 @@ toserver.addEventListener('click', (e) => {
 
 function renderView(newState, element) {
     if (tr) {
-        Array.from(tr.cells).map(cell => cell.classList.remove('active'));
+        // Array.from(tr.cells).map(cell => cell.classList.remove('active'));
     }
     switch (newState) {
         case 'new':
@@ -109,6 +114,12 @@ function renderView(newState, element) {
             state.setState('edit');
             let row = element.closest('tr');
             if (!row || !row.hasAttribute('data-timestamp') || !table.contains(row)) return;
+            
+        //     Array.from(row.cells).map(cell => {
+        //         cell.classList.add('active-tr')
+        //         console.log(cell);
+        // });
+            // row.classList.add('active');
 
             myModal.show();
 
@@ -116,13 +127,14 @@ function renderView(newState, element) {
             phone.value = row.cells[1].textContent;
             description.value = row.cells[2].textContent;
             timestamp.value = row.dataset.timestamp;
-            tr = row;
+            // tr = row;
             // tr.cells[0].classList.add('active');
-            Array.from(tr.cells).map(cell => cell.classList.add('active'));
     }
 
     status.textContent = `${state.current.status}`;
     
+    capt.textContent = `${state.current.caption}`;
+
     del.style.display = state.current.displayDelBtn ? 'inline-block' : 'none';
 
     tb.textContent = '';
@@ -190,7 +202,7 @@ async function getData(param) {
 
 async function update(param) {
     try {
-        let response = await fetch('/sv', {
+        let response = await fetch('/init', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
