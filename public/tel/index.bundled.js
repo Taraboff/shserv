@@ -1,4 +1,3 @@
-const VERSION = '1.2.21';
 const fio = document.querySelector('#fio');
 const phone = document.querySelector('#phone');
 const description = document.querySelector('#description');
@@ -15,11 +14,37 @@ const modal = document.getElementById('myModal');
 const capt = document.querySelector('.caption');
 let tr, contacts, datas;
 
-let myModal = new bootstrap.Modal(modal, {keyboard: true});
+// let myModal = new bootstrap.Modal(modal, {keyboard: true});
  
 modal.addEventListener('shown.bs.modal', function () {
-    fio.focus()
+    fio.focus();
   });
+
+var app = new Vue({
+    el: '#app',
+    data: {
+      version: '1.3.1',
+      showModal: false,
+      contacts: {},
+      status: ''
+    },
+    methods: {
+        newcontact() {
+            renderView('new');
+        },
+        edit(event) {
+            console.log(event.target);
+            renderView('edit', event.target);
+        },
+        save() {
+            savetoserver().then(res => {
+                this.status = res.message;
+            }
+            );
+        }
+    }
+    
+})
 
 function genTimeStamp(stamp) {
     const d = new Date();
@@ -49,16 +74,15 @@ class PhoneBook {
 
 let state = new PhoneBook();
 
-document.addEventListener('click', (e) => {
-    renderView('edit', e.target);
-});
+// document.addEventListener('click', (e) => {
+//     renderView('edit', e.target);
+// });
 document.addEventListener('DOMContentLoaded', function () {
     getData({ init: true })
         .then((resultData) => {
-            contacts = resultData;
+            app.contacts = resultData;
             renderView('new');
     });
-    dev.textContent = `Версия: ${VERSION}`;
 });
 
 document.querySelector('#myModal').addEventListener('submit', (e) => {
@@ -67,7 +91,7 @@ document.querySelector('#myModal').addEventListener('submit', (e) => {
     myModal.hide();
     getData({ fio: fio.value, phone: phone.value, desc: description.value, id: timestamp.value })
         .then((resultData) => {
-            contacts = resultData;
+            app.contacts = resultData;
             renderView('new');
         });
 });
@@ -76,27 +100,16 @@ del.addEventListener('click', () => {
     myModal.hide();
     getData({ id: timestamp.value, toDelete: true })
         .then((resultData) => {
-            contacts = resultData;
+            app.contacts = resultData;
             renderView('new');
         });
 });
 
-newcontact.addEventListener('click', () => {
-    myModal.show();
-    renderView('new');
-});
-
-toserver.addEventListener('click', (e) => {
-    e.preventDefault();
-    savetoserver().then(res => {
-        status.textContent = res.message;
-    }
-    );
-});
 
 // **********************  View  *******************************
 
 function renderView(newState, element) {
+
     if (tr) {
         // Array.from(tr.cells).map(cell => cell.classList.remove('active'));
     }
@@ -111,19 +124,17 @@ function renderView(newState, element) {
             break;
 
         case 'edit':
+            console.log('in EDIT fase');
             state.setState('edit');
             let row = element.closest('tr');
-            if (!row || !row.hasAttribute('data-timestamp') || !table.contains(row)) return;
+            console.log('row: ', row);
+
+            // if (!row || !row.hasAttribute('data-timestamp') || !table.contains(row)) return;
             
-        //     Array.from(row.cells).map(cell => {
-        //         cell.classList.add('active-tr')
-        //         console.log(cell);
-        // });
-            // row.classList.add('active');
-
-            myModal.show();
-
+            // myModal.show();
+            console.log(fio);
             fio.value = row.cells[0].textContent;
+            console.log(fio);
             phone.value = row.cells[1].textContent;
             description.value = row.cells[2].textContent;
             timestamp.value = row.dataset.timestamp;
@@ -137,11 +148,11 @@ function renderView(newState, element) {
 
     del.style.display = state.current.displayDelBtn ? 'inline-block' : 'none';
 
-    tb.textContent = '';
-    contacts.forEach((item, idx, arr) => {
-        const row = `<tr data-timestamp="${item.id}"><td>${item.fio}</td><td>${item.phone}</td><td>${item.desc ? item.desc : ''}</td></tr>`;
-        tb.insertAdjacentHTML('beforeend', row);
-    });
+    // tb.textContent = '';
+    // contacts.forEach((item, idx, arr) => {
+    //     const row = `<tr data-timestamp="${item.id}"><td>${item.fio}</td><td>${item.phone}</td><td>${item.desc ? item.desc : ''}</td></tr>`;
+    //     tb.insertAdjacentHTML('beforeend', row);
+    // });
 
 }
 
