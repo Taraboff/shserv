@@ -22,26 +22,26 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title caption">Редактирование контакта</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            <h5 class="modal-title caption">{{ caption }} </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" @click="closeform"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent>
               <div class="mb-3">
-                <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off">
+                <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off" v-model="fio">
               </div>
               <div class="mb-3">
-                <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off">
+                <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off" v-model="phone">
               </div>
               <div class="mb-3">
-                <input type="text" class="form-control" id="description" placeholder="Примечание" autocomplete="off">
+                <input type="text" class="form-control" id="description" placeholder="Примечание" autocomplete="off" v-model="description">
               </div>
 
-              <input type="hidden" name="timestamp" id="timestamp">
+              <input type="hidden" name="timestamp" id="timestamp" v-model="timestamp">
           </div>
           <div class="modal-footer d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary button" data-bs-dismiss="modal">Сохранить</button>
-            <button type="button" class="btn btn-primary del button" data-bs-dismiss="modal">Удалить</button>
+            <button type="submit" class="btn btn-primary button" data-bs-dismiss="modal" @click="save">Сохранить</button>
+            <button type="button" class="btn btn-primary del button" data-bs-dismiss="modal" v-if="showDelBtn" @click="delEntry">Удалить</button>
           </div>
           </form>
         </div>
@@ -59,7 +59,7 @@
               <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" class="nav-link newcontact" @click="newcontact">Новый</a>
             </li>
             <li class="navbar-item">
-              <a href="#" class="nav-link" id="savetoserver" @click.prevent="save">Сохранить</a>
+              <a href="#" class="nav-link" id="savetoserver" @click.prevent="saveonserver">Сохранить</a>
             </li>
             <!-- <li class="navbar-item">
                       <a href="#" class="nav-link">РОРС</a>
@@ -72,7 +72,7 @@
       </div>
     </nav>
 
-    <div class="alert alert-info" id="status">{{ status }}</div>
+    <div class="alert alert-info" id="status">{{ status }} </div>
 
     <main role="main" class="container">
 

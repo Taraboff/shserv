@@ -44,7 +44,7 @@ body {
     margin-right: 20px;
 }
 .del {
-    display: none;
+    display: inline-block;
 }
 /* .clear {
     position: absolute;

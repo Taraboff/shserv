@@ -1,42 +1,50 @@
-const fio = document.querySelector('#fio');
-const phone = document.querySelector('#phone');
-const description = document.querySelector('#description');
-const timestamp = document.querySelector('#timestamp');
-const button = document.querySelector('#button');
-const table = document.querySelector('#main');
-const del = document.querySelector('.del');
-const newcontact = document.querySelector('.newcontact');
-const tb = document.querySelector('#tb');
-const status = document.querySelector('#status');
-const dev = document.querySelector('.devinfo');
-const toserver = document.querySelector('#savetoserver');
-const modal = document.getElementById('myModal');
-const capt = document.querySelector('.caption');
-let tr, contacts, datas;
-
-// let myModal = new bootstrap.Modal(modal, {keyboard: true});
- 
-modal.addEventListener('shown.bs.modal', function () {
-    fio.focus();
-  });
+// const table = document.querySelector('#main');
+// const tb = document.querySelector('#tb');
+// const dev = document.querySelector('.devinfo');
+// let contacts, datas;
 
 var app = new Vue({
     el: '#app',
     data: {
-      version: '1.3.1',
+      version: '1.3.2 vue',
       showModal: false,
       contacts: {},
-      status: ''
+      status: '',
+      showDelBtn: false,
+      caption: '',
+      contactsForm: {
+          fio: '',
+          phone: '',
+          description: '',
+          timestamp: ''
+      }
     },
     methods: {
         newcontact() {
             renderView('new');
         },
         edit(event) {
-            console.log(event.target);
             renderView('edit', event.target);
         },
+        delEntry() {
+            getData({ id: this.timestamp, toDelete: true })
+                .then((resultData) => {
+                    this.contacts = resultData;
+                    renderView('new');
+            });
+        },
         save() {
+            if (this.fio === '' || this.phone === '') return;    // проверка на пустое поле ввода
+            getData({ fio: this.fio, phone: this.phone, desc: this.description, id: this.timestamp })
+                .then((resultData) => {
+            this.contacts = resultData;
+            renderView('new');
+            });
+        },
+        closeform() {
+            renderView('new');
+        },
+        saveonserver() {
             savetoserver().then(res => {
                 this.status = res.message;
             }
@@ -58,12 +66,10 @@ function genTimeStamp(stamp) {
 class PhoneBook {
     constructor() {
         this.states = {
-            new: { value: 'new', displayDelBtn: false, 
-                    status: 'Для создания нового контакта выберите в меню команду "Новый"',
-                    caption: 'Новый контакт' },
-            edit: { value: 'edit', displayDelBtn: true, 
-                    status: 'Изменение контакта',
-                    caption: 'Редактирование контакта' }
+            new: { value: 'new', 
+                    status: 'Для создания нового контакта выберите в меню команду "Новый"' },
+            edit: { value: 'edit', 
+                    status: 'Изменение контакта' }
         };
         this.current = this.states['new'];
     }
@@ -74,9 +80,6 @@ class PhoneBook {
 
 let state = new PhoneBook();
 
-// document.addEventListener('click', (e) => {
-//     renderView('edit', e.target);
-// });
 document.addEventListener('DOMContentLoaded', function () {
     getData({ init: true })
         .then((resultData) => {
@@ -85,78 +88,39 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.querySelector('#myModal').addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (fio.value === '' || phone.value === '') return;    // проверка на пустое поле ввода
-    myModal.hide();
-    getData({ fio: fio.value, phone: phone.value, desc: description.value, id: timestamp.value })
-        .then((resultData) => {
-            app.contacts = resultData;
-            renderView('new');
-        });
-});
-
-del.addEventListener('click', () => {
-    myModal.hide();
-    getData({ id: timestamp.value, toDelete: true })
-        .then((resultData) => {
-            app.contacts = resultData;
-            renderView('new');
-        });
-});
-
 
 // **********************  View  *******************************
 
 function renderView(newState, element) {
 
-    if (tr) {
-        // Array.from(tr.cells).map(cell => cell.classList.remove('active'));
-    }
     switch (newState) {
         case 'new':
             state.setState('new');
-
-            timestamp.value = genTimeStamp(true);
-            fio.value = '';
-            phone.value = '';
-            description.value = '';
+            app.caption = 'Новый контакт',
+            app.timestamp = genTimeStamp(true);
+            app.fio = '';
+            app.phone = '';
+            app.description = '';
+            app.showDelBtn = false;
             break;
 
         case 'edit':
-            console.log('in EDIT fase');
             state.setState('edit');
             let row = element.closest('tr');
-            console.log('row: ', row);
+            app.caption = 'Редактирование контакта',
+            app.fio = row.cells[0].textContent;
+            app.phone = row.cells[1].textContent;
+            app.description = row.cells[2].textContent;
+            app.timestamp = row.dataset.timestamp;
+            app.showDelBtn = true;
+        }
 
-            // if (!row || !row.hasAttribute('data-timestamp') || !table.contains(row)) return;
-            
-            // myModal.show();
-            console.log(fio);
-            fio.value = row.cells[0].textContent;
-            console.log(fio);
-            phone.value = row.cells[1].textContent;
-            description.value = row.cells[2].textContent;
-            timestamp.value = row.dataset.timestamp;
-            // tr = row;
-            // tr.cells[0].classList.add('active');
-    }
-
-    status.textContent = `${state.current.status}`;
-    
-    capt.textContent = `${state.current.caption}`;
-
-    del.style.display = state.current.displayDelBtn ? 'inline-block' : 'none';
-
-    // tb.textContent = '';
-    // contacts.forEach((item, idx, arr) => {
-    //     const row = `<tr data-timestamp="${item.id}"><td>${item.fio}</td><td>${item.phone}</td><td>${item.desc ? item.desc : ''}</td></tr>`;
-    //     tb.insertAdjacentHTML('beforeend', row);
-    // });
+    app.status = `${state.current.status}`;
 
 }
 
 // *********************** Model ****************************
+let datas;
 
 async function getData(param) {
     let data = localStorage.getItem('contacts');
