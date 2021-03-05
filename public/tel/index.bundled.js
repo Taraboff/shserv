@@ -1,12 +1,9 @@
-// const table = document.querySelector('#main');
-// const tb = document.querySelector('#tb');
-// const dev = document.querySelector('.devinfo');
-// let contacts, datas;
+let datas;
 
 var app = new Vue({
     el: '#app',
     data: {
-      version: '1.3.2 vue',
+      version: '1.3.3 vue',
       showModal: false,
       contacts: {},
       status: '',
@@ -22,9 +19,11 @@ var app = new Vue({
     methods: {
         newcontact() {
             renderView('new');
+            this.$refs['inputFio'].focus();
         },
         edit(event) {
             renderView('edit', event.target);
+            this.$refs['inputFio'].focus();
         },
         delEntry() {
             getData({ id: this.timestamp, toDelete: true })
@@ -50,8 +49,14 @@ var app = new Vue({
             }
             );
         }
-    }
-    
+    },
+    created() {
+            getData({ init: true })
+                .then((resultData) => {
+                    app.contacts = resultData;
+                    renderView('new');
+            });
+        }
 })
 
 function genTimeStamp(stamp) {
@@ -79,14 +84,6 @@ class PhoneBook {
 }
 
 let state = new PhoneBook();
-
-document.addEventListener('DOMContentLoaded', function () {
-    getData({ init: true })
-        .then((resultData) => {
-            app.contacts = resultData;
-            renderView('new');
-    });
-});
 
 
 // **********************  View  *******************************
@@ -120,57 +117,64 @@ function renderView(newState, element) {
 }
 
 // *********************** Model ****************************
-let datas;
 
 async function getData(param) {
-    let data = localStorage.getItem('contacts');
-    if (data) {
-        if (param['init']) {
-            datas = JSON.parse(data);
-        } else if (param['toDelete']) {
-            let delArray = JSON.parse(data);
-            let newArr = delArray.slice();
-            newArr.map((item, index, array) => {
-                if (item.id == param['id']) {
-                    array.splice(index, 1);
-                } else {
-                    return item;
-                }
-            });
-            datas = newArr;
-            localStorage.setItem('contacts', JSON.stringify(newArr));
-        } else {
 
-            // если запись редактируется, найти по id и перезаписать
-            let array = JSON.parse(data);
-            let newArr = array.slice();
-            newArr.map((item, index, array) => {
-                if (item.id == param['id']) {
-                    array.splice(index, 1);
-                } else {
-                    return item;
-                }
-            });
-            datas = newArr;
-            datas.push(param);
-            localStorage.setItem('contacts', JSON.stringify(datas));
+    let data = localStorage.getItem('contacts');
+    try {
+        if (data) {
+            if (param['init']) {
+                datas = JSON.parse(data);
+            } else if (param['toDelete']) {
+                let delArray = JSON.parse(data);
+                let newArr = delArray.slice();
+                newArr.map((item, index, array) => {
+                    if (item.id == param['id']) {
+                        array.splice(index, 1);
+                    } else {
+                        return item;
+                    }
+                });
+                datas = newArr;
+                localStorage.setItem('contacts', JSON.stringify(newArr));
+
+            } else {
+    
+                // если запись редактируется, найти по id и перезаписать
+                let array = JSON.parse(data);
+                let newArr = array.slice();
+                newArr.map((item, index, array) => {
+                    if (item.id == param['id']) {
+                        array.splice(index, 1);
+                    } else {
+                        return item;
+                    }
+                });
+                datas = newArr;
+                datas.push(param);
+                localStorage.setItem('contacts', JSON.stringify(datas));
+            }
+        } else {
+            datas = await update(param);
+            localStorage.setItem('contacts', JSON.stringify(datas.contacts));
+            datas = datas.contacts;
         }
 
-    } else {
-        datas = await update(param);
-        localStorage.setItem('contacts', JSON.stringify(datas.contacts));
-        datas = datas.contacts;
+        
+        let sorted = datas.slice();    // создаем новый массив для сортировки
+        
+        sorted.sort((a, b) => {          // функция сортировки
+            let x = a.fio.toLowerCase();
+            let y = b.fio.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+        });
+        
+        return await sorted;
+
+    } catch(e) {
+        localStorage.removeItem('contacts');
+        console.error('Данные в localStorage повреждены. Пожалуйста обновите страницу... ', e);
     }
-
-    let sorted = datas.slice();    // создаем новый массив для сортировки
-
-    sorted.sort((a, b) => {          // функция сортировки
-        let x = a.fio.toLowerCase();
-        let y = b.fio.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
-    });
-    
-    return await sorted;
 }
 
 // функция для считывания данных из файла на сервере
@@ -202,7 +206,6 @@ async function savetoserver() {
     obj.saved = genTimeStamp(false);
     obj.contacts = JSON.parse(dump);
 
-    // добавить в начало массива "user" и "saved"
     try {
         let response = await fetch('/save', {
             method: 'POST',

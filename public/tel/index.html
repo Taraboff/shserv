@@ -28,7 +28,7 @@
           <div class="modal-body">
             <form @submit.prevent>
               <div class="mb-3">
-                <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off" v-model="fio">
+                <input placeholder="Наименование контакта" type="text" class="form-control" id="fio" autocomplete="off" v-model="fio" ref="inputFio">
               </div>
               <div class="mb-3">
                 <input type="text" class="form-control" id="phone" placeholder="Номер телефона" autocomplete="off" v-model="phone">
