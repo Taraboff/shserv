@@ -1,12 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бережливое производство</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Бережливое производство</title>
+  <link rel="stylesheet" href="/libs/bootstrap.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <script src="/libs/bootstrap.bundle.js"></script>
+  <script src="/libs/vue.min.js"></script>
 </head>
+
 <body>
-    <h1>Проект Бережливое производство</h1>
+  <div id="app">
+    <nav class="navbar px-4 align-items-center navbar-light bg-light">
+      <a href="#" class="navbar-brand"><img src="img/RZD_logo.png" alt="logo" class="logo"></a>
+      <span class="title">Электронный стенд бережливого производства Петропавловской дистанции сигнализации и
+        связи</span>
+      <ul class="navbar-nav flex-row justify-content-end px-5">
+
+        <li class="navbar-item mx-2">
+          <a href="#" class="nav-link">Войти</a>
+        </li>
+        <li class="navbar-item mx-2">
+          <a href="#" class="nav-link">Помощь</a>
+        </li>
+
+        <li class="navbar-item mx-2">
+          <a href="#" class="nav-link">Поддержка</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container-fluid">
+      <div class="wrapper">
+        <section>
+          <div class="row pt-3 align-items-center">
+            <div class="col-10 head px-lg-5 text-center">Подразделение: ЭЦ Петропавловск</div>
+            <div class="col-2 text-center"><img src="img/lean_logo.png" class="leanlogo"></div>
+          </div>
+        </section>
+        <section>
+          <div class="row align-items-end text-center">
+            <div class="col-2 px-lg-5">Состав рабочих групп
+              <div class="a4 blue d-flex align-items-center justify-content-center"><a href="#" id="workgroup"
+                  @click.prevent="addDocument"><img class="add" src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-2 px-lg-5">Итоги 5С-аудита
+              <div class="a4 blue d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-2 px-lg-5">План применения 5С
+              <div class="a4 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-2 px-lg-5">Лучшее рабочее место
+              <div class="a4 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+
+            <div class="col-4">
+              <div class="row mx-5">
+                <div class="col-5">Было</div>
+                <div class="col-2"></div>
+                <div class="col-5">Стало</div>
+              </div>
+              <div class="row mx-5 align-items-center">
+                <div class="col-5">
+                  <div class="a5 purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                        src="./img/plus.png" alt="add document"></a></div>
+                </div>
+                <div class="col-2">⪢⪢⪢</div>
+                <div class="col-5">
+                  <div class="a5 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                        src="./img/plus.png" alt="add document"></a></div>
+                </div>
+              </div>
+              <div class="row mx-5 align-items-center">
+                <div class="col-5">
+                  <div class="a5 purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                        src="./img/plus.png" alt="add document"></a></div>
+                </div>
+                <div class="col-2">⪢⪢⪢</div>
+                <div class="col-5">
+                  <div class="a5 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                        src="./img/plus.png" alt="add document"></a></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+        <section>
+          <div class="row align-items-end text-center mt-5">
+            <div class="col-3 px-lg-5">Производственные показатели
+              <div class="a4r orange d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-3 px-lg-5">График 5С-аудита
+              <div class="a4r orange d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-3 px-lg-5">Перечень проектов и потерь
+              <div class="a4r purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+            <div class="col-3 px-lg-5">Технологические карты
+              <div class="a4r purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
+                    src="./img/plus.png" alt="add document"></a></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <script src="lean.js"></script>
 </body>
+
 </html>
