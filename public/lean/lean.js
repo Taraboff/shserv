@@ -1,13 +1,18 @@
 var app = new Vue({
     el: '#app',
     data: {
-        workgroup: 0
+        workgroup_file: ''
     },
     methods: {
         addDocument() {
-            this.workgroup++;
-            console.log('addDocument method affected... ' + this.workgroup);
+            // this.workgroup++;
+            // console.log('addDocument method affected... ' + this.workgroup);
             return true
+        },
+        upload() {
+            this.workgroup_file = this.$refs.workgroup_file.files[0];
+            console.log('this.workgroup_file: ', this.workgroup_file);
+
         }
     }
 
@@ -27,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Событие выбора файла(ов)
         el.addEventListener('change', function (e) {
-            console.log(el.closest('div'));
             // создаём массив файлов
             fileList = [];
             for (let i = 0; i < el.files.length; i++) {
@@ -59,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     textSelector.textContent = `Выбрано ${file.length} файлов`;
                 }
             } else {
+                console.log('inputFile[1]: ', inputFile[1]);
                 textSelector.textContent = file.name;
             }
         }

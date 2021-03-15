@@ -46,24 +46,24 @@
             <div class="col-2 px-lg-5">Состав рабочих групп
               <form action="/upload" method="POST" enctype="multipart/form-data">
 
-                <div class="a4 blue">
+                <div class="a4 blue bg">
                   <div>
-                    <input type="file" name="workgroup" id="workgroup" class="upload-file__input">
-                    <label for="workgroup" class="btn btn-tertiary upload-file__label">
-                      <span class="load-file1">Вставить файл...</span>
+                    <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file" @change="upload">
+                    <label for="workgroup" class="upload-file__label">
+                      <div class="load-file add"></div>
                     </label>
                   </div>
+                  <!-- <div class="break"></div> -->
                   <div>
                     <a href="#" @click.prevent="addDocument" class="upload-file__text"></a>
-
                   </div>
                 </div>
             </div>
             <div class="col-2 px-lg-5">Итоги 5С-аудита
-              <div class="a4 blue d-flex align-items-center justify-content-center">
+              <div class="a4 blue bg2">
                 <div>
-                  <input type="file" name="audit" id="audit" class="upload-file__input">
-                  <label for="audit" class="btn btn-tertiary upload-file__label">
+                  <input type="file" name="audit" id="audit" class="upload-file__input" ref="audit_file" @change="upload">
+                  <label for="audit" class="upload-file__label">
                     <div class="load-file add"></div>
                   </label>
                 </div>

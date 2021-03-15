@@ -27,6 +27,10 @@ section {
     width: 90px;
 }
 .a4 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     min-width: 210px;
     height: 320px;
     padding: 15px;
@@ -56,7 +60,15 @@ section {
     border: 1px solid #797979;
     box-shadow: 3px 3px 9px 2px rgba(0, 0, 0, 0.15);
 }
-.blue {
+.bg {
+    background: url("./img/bg_a4.jpg") no-repeat center top;
+    background-size: 210px 320px; 
+}
+.bg2 {
+    background: url("./img/bg_a4_2.jpg") no-repeat center top;
+    background-size: 210px 320px; 
+}
+.blue1 {
     background-color: #84cbfa;
     /* background: #e4f4ff; */
     background: linear-gradient(122deg, rgba(228,244,255,1) 0%, rgba(230,245,255,1) 0%, rgba(132,203,250,1) 100%);
@@ -99,23 +111,23 @@ section {
     opacity: 0.1;
 }
 
-.btn-tertiary {
-    color:#000000;
+/*.btn-tertiary1 {
     /* opacity: 0.6; */
+    /* color:#000000;
     padding:0;
     font-size: 14px;
     line-height: 30px;
     width: 160px;
     margin:auto;
-    display:block;
+    display:block; */
     /* border: 1px solid black; */
     /* background: url("./img/plus.png") no-repeat center top;
-    background-size: 70px 70px; */
+    background-size: 70px 70px; 
 }
-.btn-tertiary:hover, .btn-tertiary:focus {
+/* .btn-tertiary:hover, .btn-tertiary:focus {
     color:#000000;
     opacity: 0.9;
-}
+} */
 
 .upload-file__input {
     width:.1px;
@@ -140,24 +152,11 @@ section {
     background-size: 70px 70px;
 }
 
-/* .upload-file__input {
-    opacity: 0;
-    position: absolute;
-    
-    z-index: -1;
-    overflow: hidden;
-    width: 0.4px;
-    height: 30.4px;
-} */
-
 .upload-file__label {
-    /* display: flex;
+    display: flex;
     justify-content: center;
-    align-items: center; */
+    align-items: center;
     max-width: 210px;
-    /* border: 1px solid #aaaaaa; */
-    padding: 6px 49px;
-    /* border-radius: 6px; */
     cursor: pointer;
 }
 .upload-file__text {
@@ -166,10 +165,9 @@ section {
 .upload-file__label .upload-file__text {
     transition: .25s ease;
 }
-
-
-/* .upload-file__label:hover {
-    /* border: 1px solid #5f5f5f;
-    border-radius: 6px; 
-    color: #5f5f5f;
-} */
+.break {
+    /* Вставка разрыва строки между двумя flex-элементами заставит 
+ * flex-элемент, который расположен после него переноситься на новую строку */
+    flex-basis: 100%;
+    height: 0;
+}
