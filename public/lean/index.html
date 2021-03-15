@@ -50,7 +50,7 @@
                   <div>
                     <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file" @change="upload">
                     <label for="workgroup" class="upload-file__label">
-                      <div class="load-file add"></div>
+                      <div :class="{'load-file add':true}"></div>
                     </label>
                   </div>
                   <!-- <div class="break"></div> -->

@@ -1,7 +1,8 @@
 var app = new Vue({
     el: '#app',
     data: {
-        workgroup_file: ''
+        workgroup_file: '',
+        audit_file: ''
     },
     methods: {
         addDocument() {
@@ -10,8 +11,10 @@ var app = new Vue({
             return true
         },
         upload() {
-            this.workgroup_file = this.$refs.workgroup_file.files[0];
-            console.log('this.workgroup_file: ', this.workgroup_file);
+            this.audit_file = this.$refs.audit_file.files[0];
+            const form = document.querySelector('form');
+            form.submit();
+            console.log('this.audit_file: ', this.audit_file);
 
         }
     }
@@ -21,8 +24,6 @@ var app = new Vue({
 document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     const inputFile = document.querySelectorAll('.upload-file__input');
-    console.log('inputFile: ', inputFile);
-
 
     /////////// Кнопка «Прикрепить файл» ///////////
     inputFile.forEach(function (el) {
@@ -36,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fileList = [];
             for (let i = 0; i < el.files.length; i++) {
                 fileList.push(el.files[i]);
-                console.log('el.files[i]: ', el.files[i]);
             }
 
             // вызов функции для каждого файла
@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     textSelector.textContent = `Выбрано ${file.length} файлов`;
                 }
             } else {
-                console.log('inputFile[1]: ', inputFile[1]);
                 textSelector.textContent = file.name;
             }
         }
