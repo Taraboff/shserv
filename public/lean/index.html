@@ -44,11 +44,12 @@
         <section>
           <div class="row align-items-end text-center">
             <div class="col-2 px-lg-5">Состав рабочих групп
-              <form action="/upload" method="POST" enctype="multipart/form-data">
+              <form method="POST" enctype="multipart/form-data" @submit="uploadFile()">
 
                 <div class="a4 blue bg">
                   <div>
-                    <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file" @change="upload">
+                    <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file"
+                      @change="upload">
                     <label for="workgroup" class="upload-file__label">
                       <div :class="{'load-file add':true}"></div>
                     </label>
@@ -62,7 +63,8 @@
             <div class="col-2 px-lg-5">Итоги 5С-аудита
               <div class="a4 blue bg2">
                 <div>
-                  <input type="file" name="audit" id="audit" class="upload-file__input" ref="audit_file" @change="upload">
+                  <input type="file" name="audit" id="audit" class="upload-file__input" ref="audit_file"
+                    @change="upload">
                   <label for="audit" class="upload-file__label">
                     <div class="load-file add"></div>
                   </label>
@@ -72,7 +74,7 @@
 
                 </div>
               </div>
-            </form>
+              </form>
             </div>
             <div class="col-2 px-lg-5">План применения 5С
               <div class="a4 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
