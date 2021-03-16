@@ -5,21 +5,18 @@ var app = new Vue({
         audit_file: ''
     },
     methods: {
-        addDocument() {
-            // this.workgroup++;
-            // console.log('addDocument method affected... ' + this.workgroup);
-            return true
-        },
         async upload(e) {
-            
-            let response = fetch('/upload', {
+            const fData = new FormData();
+            fData.append('uploadfile', e.target.files[0]);
+
+            let response = await fetch('/upload', {
                 method: 'POST',
-                body: e.target.files[0]
+                body: fData
             });
+            let result = await response.text();
+            console.log('result: ', result);
+
         },
-        uploadFile() {
-            console.log('File uploaded!');
-        }
     }
 
 });

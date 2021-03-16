@@ -12,20 +12,27 @@ const storageConfig = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+const fileFilter = (req, file, cb) => {
+  
+    if(file.mimetype === "image/jpeg" || 
+    file.mimetype === "image/jpg"|| 
+    file.mimetype === "application/pdf"){
+        cb(null, true);
+    }
+    else{
+        cb(null, false);
+    }
+ }
+const upload = multer({storage:storageConfig, fileFilter });
 
-app.use(multer({storage:storageConfig}).single("filedata"));
-app.post("/upload", function (req, res, next) {
-   
+
+router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
     let filedata = req.file;
+    console.log(filedata);
     if(!filedata)
         res.send("Ошибка при загрузке файла");
     else
-        res.send("Файл загружен");
-});
-
-router.post('/upload', (req, res) => {
-    const ip = req.ip.split(":").pop();
-    res.redirect('/lean');
+        res.send(`Файл ${req.file.originalname} загружен`);
 
 });
 
