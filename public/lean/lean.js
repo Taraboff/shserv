@@ -7,16 +7,19 @@ var app = new Vue({
     methods: {
         async upload(e) {
             const fData = new FormData();
-            fData.append('uploadfile', e.target.files[0]);
+            console.log('Загрузка файла...');
 
+            fData.append('uploadfile', e.target.files[0]);
+            
             let response = await fetch('/upload', {
                 method: 'POST',
                 body: fData
             });
             let result = await response.text();
-            console.log('result: ', result);
-
-        },
+            console.log(result);
+            
+            document.querySelector('form').reset();   // очищаем форму
+        }
     }
 
 });

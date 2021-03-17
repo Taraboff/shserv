@@ -62,6 +62,7 @@ section {
 }
 .bg {
     background: url("./img/bg_a4.jpg") no-repeat center top;
+    opacity: 1;
     background-size: 210px 320px; 
 }
 .bg2 {
