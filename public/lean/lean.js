@@ -1,8 +1,7 @@
 var app = new Vue({
     el: '#app',
     data: {
-        workgroup_file: '',
-        audit_file: ''
+        currentDept: 'default'
     },
     methods: {
         async upload(e) {

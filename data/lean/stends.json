@@ -1,0 +1,29 @@
+{
+    "default": {},
+    "8": {
+        "stends": [{
+                "current": true,
+                "version": "21.03.2021",
+                "workgroup": "8_21032021_workgroup_sostav_rabochey_gruppy_pdf.pdf",
+                "result5s": "",
+                "plan5s": "",
+                "best": "",
+                "before1": "",
+                "after1": "",
+                "before2": "",
+                "after2": "",
+                "params": "",
+                "graphic5s": "",
+                "projects": "",
+                "techcards": ""
+            },
+            {
+                "current": false,
+                "version": "21.12.2020"
+            }
+        ]
+    },
+    "13": {
+
+    }
+}
