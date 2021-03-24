@@ -3902,7 +3902,7 @@ textarea.form-control-lg {
   padding-left: 0;
 }
 .navbar-nav .dropdown-menu {
-  position: static;
+  position: absolute;     /* изменил со static на absolute 21.03.2021 */
 }
 
 .navbar-text {

@@ -2,144 +2,197 @@
 <html lang="ru">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Бережливое производство</title>
-  <link rel="stylesheet" href="/libs/bootstrap.css">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <script src="/libs/bootstrap.bundle.js"></script>
-  <script src="/libs/vue.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бережливое производство</title>
+    <link rel="stylesheet" href="/libs/bootstrap.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <script src="/libs/bootstrap.bundle.js"></script>
+    <script src="/libs/vue.min.js"></script>
 </head>
 
 <body>
-  <div id="app">
-    <nav class="navbar px-4 align-items-center navbar-light bg-light">
-      <a href="#" class="navbar-brand"><img src="img/RZD_logo.png" alt="logo" class="logo"></a>
-      <span class="title">Электронный стенд бережливого производства Петропавловской дистанции сигнализации и
+    <div id="app">
+        <nav class="navbar px-4 align-items-center navbar-light bg-light">
+            <a href="#" class="navbar-brand"><img src="img/RZD_logo.png" alt="logo" class="logo"></a>
+            <span class="title">Электронный стенд бережливого производства Петропавловской дистанции сигнализации и
         связи</span>
-      <ul class="navbar-nav flex-row justify-content-end px-5">
+            <ul class="navbar-nav flex-row justify-content-end px-5">
 
-        <li class="navbar-item mx-2">
-          <a href="#" class="nav-link">Войти</a>
-        </li>
-        <li class="navbar-item mx-2">
-          <a href="#" class="nav-link">Помощь</a>
-        </li>
+                <li class="nav-item mx-2 dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDepts" role="button" data-bs-toggle="dropdown" aria-expanded="false">Войти
+          </a>
 
-        <li class="navbar-item mx-2">
-          <a href="#" class="nav-link">Поддержка</a>
-        </li>
-      </ul>
-    </nav>
-    <div class="container-fluid">
-      <div class="wrapper">
-        <section>
-          <div class="row pt-3 align-items-center">
-            <div class="col-10 head px-lg-5 text-center">Подразделение: ЭЦ Петропавловск</div>
-            <div class="col-2 text-center"><img src="img/lean_logo.png" class="leanlogo"></div>
-          </div>
-        </section>
-        <section>
-          <div class="row align-items-end text-center">
-            <div class="col-2 px-lg-5">Состав рабочих групп
-              <form>
-                <div class="a4 blue bg">
-                  <div>
-                    <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file"
-                      @change="upload">
-                    <label for="workgroup" class="upload-file__label">
-                      <div :class="{'load-file add':true}"></div>
-                    </label>
-                  </div>
-                  <div>
-                    <a href="#" @click.prevent="addDocument" class="upload-file__text"></a>
-                  </div>
-                </div>
-            </div>
-            <div class="col-2 px-lg-5">Итоги 5С-аудита
-              <div class="a4 blue bg2">
-                <div>
-                  <input type="file" name="audit" id="audit" class="upload-file__input" ref="audit_file"
-                    @change="upload">
-                  <label for="audit" class="upload-file__label">
-                    <div class="load-file add"></div>
-                  </label>
-                </div>
-                <div>
-                  <a href="#" @click.prevent="addDocument" class="upload-file__text"></a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownDepts">
 
-                </div>
-              </div>
-              </form>
-            </div>
-            <div class="col-2 px-lg-5">План применения 5С
-              <div class="a4 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
-            </div>
-            <div class="col-2 px-lg-5">Лучшее рабочее место
-              <div class="a4 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
-            </div>
+                        <li v-for="item, idx in deptsList">
+                            <a class="dropdown-item" href="#" @click="chooseDept" :data-dept="idx">{{ `${item.code} - ${item.name}` }}</a>
+                        </li>
 
-            <div class="col-4">
-              <div class="row mx-5">
-                <div class="col-5">Было</div>
-                <div class="col-2"></div>
-                <div class="col-5">Стало</div>
-              </div>
-              <div class="row mx-5 align-items-center">
-                <div class="col-5">
-                  <div class="a5 purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                        src="./img/plus.png" alt="add document"></a></div>
-                </div>
-                <div class="col-2">⪢⪢⪢</div>
-                <div class="col-5">
-                  <div class="a5 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                        src="./img/plus.png" alt="add document"></a></div>
-                </div>
-              </div>
-              <div class="row mx-5 align-items-center">
-                <div class="col-5">
-                  <div class="a5 purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                        src="./img/plus.png" alt="add document"></a></div>
-                </div>
-                <div class="col-2">⪢⪢⪢</div>
-                <div class="col-5">
-                  <div class="a5 green d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                        src="./img/plus.png" alt="add document"></a></div>
-                </div>
-              </div>
-            </div>
+                        <!-- <li>
+                            <hr class="dropdown-divider">
+                        </li> -->
 
-          </div>
-        </section>
-        <section>
-          <div class="row align-items-end text-center mt-5">
-            <div class="col-3 px-lg-5">Производственные показатели
-              <div class="a4r orange d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
+                        <li><a class="dropdown-item" href="#">Выйти</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item mx-2 dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Версия стенда
+          </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li v-for="item, idx in versionsList">
+                            <a class="dropdown-item" href="#" @click="chooseStendVersion(idx)">v.{{ item }}</a>
+                        </li>
+
+                        <!-- <li>
+                            <hr class="dropdown-divider">
+                        </li> -->
+                        <li><a class="dropdown-item" href="#">Новый</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="navbar-item mx-2" v-if="isAuth">
+                    <a href="#" class="nav-link" v-if="stendVersion">v.{{ stendVersion }}</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container-fluid">
+            <div class="wrapper">
+                <section>
+                    <div class="row pt-3 align-items-center">
+                        <div class="col-10 head px-lg-5 text-center"><span v-if="currentDept.name" class="px-2">Подразделение:  </span>{{ currentDept.name }}</div>
+                        <div class="col-2 text-center"><img src="img/lean_logo.png" class="leanlogo"></div>
+                    </div>
+                </section>
+                <section>
+                    <div class="row align-items-end text-center">
+                        <div class="col-2 px-lg-5">Состав рабочих групп
+                            <form>
+                                <a :href="files.workgroup" target="_blank">
+                                    <div class="a4 bg-workgroup" :class="{blue: blankBg.workgroup}">
+                                        <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file" @change="upload">
+                                        <label for="workgroup" class="upload-file__label">
+                                          <div :class="{'load-file add':true}"></div>
+                                        </label>
+                                    </div>
+                                </a>
+                            </form>
+                        </div>
+                        <div class="col-2 px-lg-5">Итоги 5С-аудита
+                            <form>
+                                <a :href="files.result5s" target="_blank">
+                                    <div class="a4 bg-result5s" :class="{blue: blankBg.result5s}">
+                                        <div>
+                                            <input type="file" name="result5s" id="result5s" class="upload-file__input" ref="result5s_file" @change="upload">
+                                            <label for="result5s" class="upload-file__label">
+                                                <div class="load-file add"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </a>
+                            </form>
+                        </div>
+                        <div class="col-2 px-lg-5">План применения 5С
+                            <form>
+                                <a :href="files.plan5s" target="_blank">
+                                    <div class="a4 green bg-plan5s">
+                                        <div>
+                                            <input type="file" name="plan5s" id="plan5s" class="upload-file__input" ref="plan5s_file" @change="upload">
+                                            <label for="plan5s" class="upload-file__label">
+                                                <div class="load-file add"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </a>
+                            </form>
+                        </div>
+                        <div class="col-2 px-lg-5">Лучшее рабочее место
+                            <form>
+                                <a :href="files.best" target="_blank">
+                                    <div class="a4 green bg-best">
+                                        <div>
+                                            <input type="file" name="best" id="best" class="upload-file__input" ref="best_file" @change="upload">
+                                            <label for="best" class="upload-file__label">
+                                                <div class="load-file add"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </a>
+                            </form>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row mx-5">
+                                <div class="col-5">Было</div>
+                                <div class="col-2"></div>
+                                <div class="col-5">Стало</div>
+                            </div>
+                            <div class="row mx-5 align-items-center">
+                                <div class="col-5">
+                                    <div class="a5 purple d-flex align-items-center justify-content-center">
+                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                                    </div>
+                                </div>
+                                <div class="col-2">⪢⪢⪢</div>
+                                <div class="col-5">
+                                    <div class="a5 green d-flex align-items-center justify-content-center">
+                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-5 align-items-center">
+                                <div class="col-5">
+                                    <div class="a5 purple d-flex align-items-center justify-content-center">
+                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                                    </div>
+                                </div>
+                                <div class="col-2">⪢⪢⪢</div>
+                                <div class="col-5">
+                                    <div class="a5 green d-flex align-items-center justify-content-center">
+                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                <section>
+                    <div class="row align-items-end text-center mt-5">
+                        <div class="col-3 px-lg-5">Производственные показатели
+                            <div class="a4r orange d-flex align-items-center justify-content-center">
+                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                            </div>
+                        </div>
+                        <div class="col-3 px-lg-5">График 5С-аудита
+                            <div class="a4r orange d-flex align-items-center justify-content-center">
+                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                            </div>
+                        </div>
+                        <div class="col-3 px-lg-5">Перечень проектов и потерь
+                            <div class="a4r purple d-flex align-items-center justify-content-center">
+                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                            </div>
+                        </div>
+                        <div class="col-3 px-lg-5">Технологические карты
+                            <div class="a4r purple d-flex align-items-center justify-content-center">
+                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="col-3 px-lg-5">График 5С-аудита
-              <div class="a4r orange d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
-            </div>
-            <div class="col-3 px-lg-5">Перечень проектов и потерь
-              <div class="a4r purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
-            </div>
-            <div class="col-3 px-lg-5">Технологические карты
-              <div class="a4r purple d-flex align-items-center justify-content-center"><a href="#"><img class="add"
-                    src="./img/plus.png" alt="add document"></a></div>
-            </div>
-          </div>
-        </section>
-      </div>
+        </div>
+        <!-- /.container-fluid -->
     </div>
-    <!-- /.container-fluid -->
-  </div>
-  <script src="lean.js"></script>
+    <script src="lean.js"></script>
 </body>
 
 </html>

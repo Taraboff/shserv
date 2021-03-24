@@ -3,9 +3,18 @@ const multer = require('multer');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const mysql = require('mysql2');
+let newName, errMsg;
+
+const connection = mysql.createPool({
+    host: 'localhost',
+    user: 'mysql',
+    password: 'mysql',
+    database: 'lean'
+});
 
 const storageConfig = multer.diskStorage({
-    destination: (req, file, cb) =>{
+    destination: (req, file, cb) => {
         cb(null, "uploads");
     },
     filename: (req, file, cb) => {
@@ -17,13 +26,14 @@ const storageConfig = multer.diskStorage({
         let translitArray = {
             "а": "a", 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh',
             'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
-            'о': 'o', 'п': 'p', 'р': 'r','с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
-            'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh','ъ': space,
+            'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
+            'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': space,
             'ы': 'y', 'ь': space, 'э': 'e', 'ю': 'yu', 'я': 'ya'
         };
-        let translate = function(v) {   // функция транслитерации
+
+        let translate = function (v) {   // функция транслитерации
             if (/[а-яё]/.test(v)) {
-                link = translitArray[v] ;
+                link = translitArray[v];
             } else if (/[a-z0-9]/.test(v)) {
                 link = v;
             } else {
@@ -31,32 +41,69 @@ const storageConfig = multer.diskStorage({
             }
             return link;
         }
-        let translitName = Array.from(name, (v) => translate(v) ).join('');
 
-        cb(null, translitName + ext);
+        let translitedName = Array.from(name, (v) => translate(v)).join('');
+        newName = `${req.body.dept}_${req.body.stend}_${req.body.pocket}_${translitedName}${ext}`;
+
+        cb(null, newName);
     }
 });
+
 const fileFilter = (req, file, cb) => {
 
-  const allowedFileTypes = ["image/jpeg", "image/jpeg", "image/png", "application/pdf"];
-
+    const allowedFileTypes = ["image/jpeg", "image/jpeg", "image/png", "application/pdf"];
     if (allowedFileTypes.includes(file.mimetype)) {
         cb(null, true);
     }
-    else{
+    else {
+        errMsg = 'Неверный тип документа';
         cb(null, false);
     }
- }
-const upload = multer({storage:storageConfig, fileFilter });
+}
+const upload = multer({ storage: storageConfig, fileFilter });
 
 
 router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
-    
-    if(!req.file)
-        res.send("Ошибка при загрузке файла");
-    else
-        res.send(`Файл ${req.file.originalname} загружен`);
+    const uploadMsg = {};
+    if (!req.file)
+        uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
+    else {
+        uploadMsg.msg = `Файл ${req.file.originalname} загружен`;
+        uploadMsg.file = newName;
+    }
 
+    res.send(JSON.stringify(uploadMsg));
+});
+
+router.get('/getstends/:deptId', function (req, res) {
+    const sql = `SELECT * FROM stends WHERE dept = ${req.params.deptId}`;
+
+    connection.query(sql, (err, results) => {
+        if (err) console.log(err);
+        res.send(JSON.stringify(results));
+    });
+
+});
+
+router.get('/init', function (req, res) {
+
+    const sql = 'SELECT * FROM users';
+
+    connection.query(sql, (err, results) => {
+        if (err) console.log(err);
+        res.send(JSON.stringify(results));
+
+    });
+
+    // чтение из файла 
+    // try {
+    //     fs.readFile('data/lean/stends.json', 'utf8', (err, stendData) => {
+    //         res.send(JSON.stringify(stendData));
+    //     });
+
+    // } catch (e) {
+    //     console.log('Ошибка чтения файла stends.json');
+    // }
 });
 
 module.exports = router;
