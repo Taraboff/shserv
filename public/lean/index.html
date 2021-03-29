@@ -77,7 +77,7 @@
                             <form>
                                 <a :href="files.workgroup" target="_blank">
                                     <div class="a4 bg-workgroup" :class="{blue: blankBg.workgroup}">
-                                        <input type="file" name="workgroup" id="workgroup" class="upload-file__input" ref="workgroup_file" @change="upload">
+                                        <input type="file" name="workgroup" id="workgroup" class="upload-file__input" @change="upload">
                                         <label for="workgroup" class="upload-file__label">
                                           <div :class="{'load-file add':true}"></div>
                                         </label>

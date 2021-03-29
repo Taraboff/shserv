@@ -16,7 +16,7 @@ var app = new Vue({
             workgroup: true,
             result5s: true
         },
-        isAuth: false,
+        isAuth: true,
         deptsList: [],
         versionsList: []
     },
@@ -26,7 +26,8 @@ var app = new Vue({
             console.log('Загрузка файла...');
 
             fData.append('stend', this.stendVersion);
-            fData.append('dept', this.currentDept.code);
+            fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
+            fData.append('deptId', this.currentDept.id);
             fData.append('pocket', e.target.name);
             fData.append('uploadfile', e.target.files[0]);
 
@@ -36,6 +37,8 @@ var app = new Vue({
             });
             let result = await response.json();
             this.message = result.msg;
+            console.log(this.message);
+
             this.files[e.target.name] = '/uploads/' + result.file;
 
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
@@ -43,6 +46,7 @@ var app = new Vue({
         async chooseDept(e) {
 
             this.currentDept = this.deptsList[e.target.dataset.dept];
+
             this.isAuth = true;
             this.versionsList = [];
             //запрос к БД объекта стендов
@@ -55,12 +59,15 @@ var app = new Vue({
 
                     }
                     this.stends = [...result];
+                    
+
                 }
 
             }
         },
         chooseStendVersion(idx) {
             this.currentStend = idx;
+            this.stendVersion = this.stends[idx].version;
 
             if (this.stends[idx].workgroup) { // если в кармане workgroup текущего стенда есть файл
                 this.files.workgroup = this.stends[idx].workgroup;
@@ -90,6 +97,8 @@ var app = new Vue({
 
             if (result.length) {
                 this.deptsList = [...result];
+                console.log('this.deptsList: ', this.deptsList);
+
             }
         } else {
             console.log(`Ошибка init: ${response.status}`);

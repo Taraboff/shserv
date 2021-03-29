@@ -8,8 +8,8 @@ let newName, errMsg;
 
 const connection = mysql.createPool({
     host: 'localhost',
-    user: 'mysql',
-    password: 'mysql',
+    user: 'root',
+    password: 'root',
     database: 'lean'
 });
 
@@ -68,32 +68,52 @@ router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
     if (!req.file)
         uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
     else {
-        uploadMsg.msg = `Файл ${req.file.originalname} загружен`;
+        uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
         uploadMsg.file = newName;
+
+        //  запись в БД имени файла
+        // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
+        const sql = `UPDATE stends SET ${req.body.pocket}='${newName}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
+        try {
+            connection.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                } 
+                
+            });
+            } catch (e) {
+                console.log(e);
+            }
     }
 
     res.send(JSON.stringify(uploadMsg));
 });
 
 router.get('/getstends/:deptId', function (req, res) {
-    const sql = `SELECT * FROM stends WHERE dept = ${req.params.deptId}`;
+    const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;
 
+    try {
     connection.query(sql, (err, results) => {
         if (err) console.log(err);
         res.send(JSON.stringify(results));
     });
+    } catch (e) {
+        console.log(e);
+    }
 
 });
 
 router.get('/init', function (req, res) {
 
-    const sql = 'SELECT * FROM users';
-
+    const sql = 'SELECT * FROM users;';
+    
     connection.query(sql, (err, results) => {
+        
         if (err) console.log(err);
         res.send(JSON.stringify(results));
 
     });
+    
 
     // чтение из файла 
     // try {
