@@ -1,3 +1,9 @@
+Vue.component('lean-foto', {
+    template: `<div class="a5 d-flex align-items-center justify-content-center" :class="{bg-foto: true}" :class="{purple: blankBg.before1}">
+                    <a href="#" class="load-file add"></a>
+                </div>`,
+    props: ['img']
+});
 var app = new Vue({
     el: '#app',
     data: {
@@ -10,7 +16,8 @@ var app = new Vue({
             workgroup: '',
             result5s: '',
             plan5s: '',
-            best: ''
+            best: '',
+            before1: './img/before1.jpg'
         },
         blankBg: {
             workgroup: true,

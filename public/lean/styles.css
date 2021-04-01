@@ -77,6 +77,10 @@ section {
     background: url("./img/bg_result5s.jpg") no-repeat center top;
     background-size: 210px 320px;
 }
+.bg-foto {
+    background: url("./img/bg_before1.jpg") no-repeat center top;
+    background-size: 170px 130px;
+}
 
 .blue {
     background-color: #84cbfa;
