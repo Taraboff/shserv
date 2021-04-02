@@ -61,6 +61,9 @@ section {
 }
 
 .a5 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-width: 120px;
     height: 130px;
     margin-top: 20px;
@@ -125,38 +128,13 @@ section {
     width: 70px;
     height: 70px;
     opacity: 0.04;
-    z-index: 1;
-    background: url("./img/plus.png") no-repeat left top;
+    background: url("./img/plus.png") no-repeat center top;
+    background-size: 70px 70px;
 }
 
 .add:hover {
     opacity: 0.1;
 }
-
-
-/*.btn-tertiary1 {
-    /* opacity: 0.6; */
-
-
-/* color:#000000;
-    padding:0;
-    font-size: 14px;
-    line-height: 30px;
-    width: 160px;
-    margin:auto;
-    display:block; */
-
-
-/* border: 1px solid black; */
-
-
-/* background: url("./img/plus.png") no-repeat center top;
-    background-size: 70px 70px; 
-}
-/* .btn-tertiary:hover, .btn-tertiary:focus {
-    color:#000000;
-    opacity: 0.9;
-} */
 
 .upload-file__input {
     width: .1px;
@@ -174,13 +152,6 @@ section {
     cursor: pointer;
 }
 
-.load-file {
-    display: flex;
-    width: 70px;
-    height: 70px;
-    background: url("./img/plus.png") no-repeat center top;
-    background-size: 70px 70px;
-}
 
 .upload-file__label {
     display: flex;

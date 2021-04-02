@@ -1,8 +1,16 @@
+Vue.config.debug = true; 
+Vue.config.devtools = true;
+
 Vue.component('lean-foto', {
-    template: `<div class="a5 d-flex align-items-center justify-content-center" :class="{bg-foto: true}" :class="{purple: blankBg.before1}">
-                    <a href="#" class="load-file add"></a>
+    template: `<div class="a5">
+                    <a href="#" class="add" @click="addfile"></a>
                 </div>`,
-    props: ['img']
+    props: ['img'],
+    methods: {
+        addfile() {
+            this.$emit('add', 'new');
+        }
+    }
 });
 var app = new Vue({
     el: '#app',
@@ -28,6 +36,9 @@ var app = new Vue({
         versionsList: []
     },
     methods: {
+        addfoto(e) {
+            this.files.before1 = e;
+        },
         async upload(e) {
             const fData = new FormData();
             console.log('Загрузка файла...');
@@ -51,7 +62,6 @@ var app = new Vue({
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
         },
         async chooseDept(e) {
-
             this.currentDept = this.deptsList[e.target.dataset.dept];
 
             this.isAuth = true;
@@ -104,7 +114,7 @@ var app = new Vue({
 
             if (result.length) {
                 this.deptsList = [...result];
-                console.log('this.deptsList: ', this.deptsList);
+                // console.log('this.deptsList: ', this.deptsList);
 
             }
         } else {
@@ -114,4 +124,4 @@ var app = new Vue({
 
 });
 
-Vue.config.devtools = true;
+

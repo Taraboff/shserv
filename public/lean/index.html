@@ -10,7 +10,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <script src="/libs/bootstrap.bundle.js"></script>
-    <script src="/libs/vue.min.js"></script>
+    <script src="/libs/vue.js"></script>
 </head>
 
 <body>
@@ -81,7 +81,7 @@
                                     <div class="a4 bg-workgroup" :class="{blue: blankBg.workgroup}">
                                         <input type="file" name="workgroup" id="workgroup" class="upload-file__input" @change="upload">
                                         <label for="workgroup" class="upload-file__label">
-                                          <div :class="{'load-file add':true}"></div>
+                                          <div :class="{'add':true}"></div>
                                         </label>
                                     </div>
                                 </a>
@@ -94,7 +94,7 @@
                                         <div>
                                             <input type="file" name="result5s" id="result5s" class="upload-file__input" ref="result5s_file" @change="upload">
                                             <label for="result5s" class="upload-file__label">
-                                                <div class="load-file add"></div>
+                                                <div class="add"></div>
                                             </label>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                         <div>
                                             <input type="file" name="plan5s" id="plan5s" class="upload-file__input" ref="plan5s_file" @change="upload">
                                             <label for="plan5s" class="upload-file__label">
-                                                <div class="load-file add"></div>
+                                                <div class="add"></div>
                                             </label>
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@
                                         <div>
                                             <input type="file" name="best" id="best" class="upload-file__input" ref="best_file" @change="upload">
                                             <label for="best" class="upload-file__label">
-                                                <div class="load-file add"></div>
+                                                <div class="add"></div>
                                             </label>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@
 
                         <div class="col-4">
                             <div class="row mx-5">
-                                <div class="col-5">Было</div>
+                                <div class="col-5" v-text="files.before1">Было</div>
                                 <div class="col-2"></div>
                                 <div class="col-5">Стало</div>
                             </div>
@@ -140,7 +140,7 @@
 
                                 <!--Место для вставки компонента-->
                                 <div id="lean_foto_1" class="col-5">                                   
-                                    <lean-foto :img="stendVersion"></lean-foto>
+                                    <lean-foto :img="files.before1" @add="addfoto" :data-pt="files.before1"></lean-foto>
                                 </div> 
 
 
