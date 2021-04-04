@@ -30,45 +30,35 @@ section {
     width: 90px;
 }
 
-.a4 {
+.a4, .a4r, .a5 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    min-width: 210px;
-    height: 320px;
     padding: 15px;
     margin-top: 20px;
     border: 1px solid #797979;
     box-shadow: 3px 3px 9px 2px rgba(0, 0, 0, 0.15);
 }
+.a4 {
+    min-width: 210px;
+    height: 320px;
+}
 
 .a4r {
     min-width: 300px;
     height: 210px;
-    padding: 15px;
-    margin-top: 20px;
-    border: 1px solid #797979;
-    box-shadow: 3px 3px 9px 2px rgba(0, 0, 0, 0.15);
+}
+
+.a5 {
+    min-width: 120px;
+    height: 130px;
 }
 
 .a4:hover,
 .a4r:hover,
 .a5:hover {
     cursor: pointer;
-    /* border: 1px solid #797979; */
-    /* box-shadow: 1px 1px 9px 2px rgba(0, 0, 0, 0.15); */
-}
-
-.a5 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 120px;
-    height: 130px;
-    margin-top: 20px;
-    border: 1px solid #797979;
-    box-shadow: 3px 3px 9px 2px rgba(0, 0, 0, 0.15);
 }
 
 .bg-workgroup {
