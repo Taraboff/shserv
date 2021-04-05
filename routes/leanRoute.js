@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const fs = require('fs');
+const gm = require('gm');
 const path = require('path');
 const mysql = require('mysql2');
 let newName, errMsg;
@@ -51,7 +52,7 @@ const storageConfig = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
 
-    const allowedFileTypes = ["image/jpeg", "image/jpeg", "image/png", "application/pdf"];
+    const allowedFileTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
     if (allowedFileTypes.includes(file.mimetype)) {
         cb(null, true);
     }
@@ -62,6 +63,17 @@ const fileFilter = (req, file, cb) => {
 }
 const upload = multer({ storage: storageConfig, fileFilter });
 
+router.get('/loadimage', function(req, res, next) {
+    const pt = path.join(__dirname, '../uploads', '0211.jpg');
+    const pt2 = path.join(__dirname, '../uploads', '0211.png');
+
+    gm(pt)
+    .resize(320, 240, '!')
+    .write(pt2, function (err) {
+        if (!err) console.log('File converting...');
+      });
+    res.send('Resizing image done!');
+});
 
 router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
     const uploadMsg = {};
@@ -74,6 +86,8 @@ router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
         //  запись в БД имени файла
         // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
         const sql = `UPDATE stends SET ${req.body.pocket}='${newName}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
+        console.log('sql: ', sql);
+
         try {
             connection.query(sql, (err, results) => {
                 if (err) {
@@ -84,6 +98,10 @@ router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
             } catch (e) {
                 console.log(e);
             }
+        // После загрузки файла в /uploads и сохранения в БД 
+        // создать миниатюру в случае если было загружено изображение
+        
+
     }
 
     res.send(JSON.stringify(uploadMsg));

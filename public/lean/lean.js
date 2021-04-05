@@ -2,13 +2,31 @@ Vue.config.debug = true;
 Vue.config.devtools = true;
 
 Vue.component('lean-foto', {
-    template: `<div class="a5">
-                    <a href="#" class="add" @click="addfile"></a>
-                </div>`,
-    props: ['img'],
+    template: `<form>
+                    <a :href="pocket.file ? '/uploads/' + pocket.file : ''" target="_blank">
+                        <div :class="classList">
+                            <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
+                            <label :for="pocket.name" class="upload-file__label">
+                                <div class="add"></div>
+                            </label>
+                        </div>
+                    </a>
+                </form>`,
+    data() {
+        return {
+            format: 'a5'
+        }
+    },
+    props: ['pocket', 'up'],
     methods: {
-        addfile() {
-            this.$emit('add', 'new');
+        addfile(e) {
+            this.$emit('up', e);
+        }
+    },
+    computed: {
+        classList() {
+            const classes = [this.format, 'purple'];
+            return classes;
         }
     }
 });
@@ -20,6 +38,24 @@ var app = new Vue({
         currentStend: '',
         stendVersion: '',
         message: '',
+        pockets: {
+            workgroup: {
+                name: 'workgroup',
+                file: '',
+                format: 'a4',
+                thumbclass: 'bg-workgroup',
+                ifempty: 'blue',
+                classes: {
+                    a4: true,
+                    'bg-workgroup': true,
+                    blue: false
+                }
+            },
+            before1: {
+                name: 'before1',
+                file: ''
+            }
+        },
         files: {
             workgroup: '',
             result5s: '',
@@ -27,9 +63,11 @@ var app = new Vue({
             best: '',
             before1: './img/before1.jpg'
         },
-        blankBg: {
-            workgroup: true,
-            result5s: true
+        thumbs: {
+            before1: '',
+            after1: '',
+            before2: '',
+            after2: ''
         },
         isAuth: true,
         deptsList: [],
@@ -37,9 +75,11 @@ var app = new Vue({
     },
     methods: {
         addfoto(e) {
-            this.files.before1 = e;
+            console.log('e: ', e);
+            
         },
         async upload(e) {
+
             const fData = new FormData();
             console.log('Загрузка файла...');
 
@@ -57,7 +97,8 @@ var app = new Vue({
             this.message = result.msg;
             console.log(this.message);
 
-            this.files[e.target.name] = '/uploads/' + result.file;
+            this.files[e.target.name] = result.file;   
+            this.pockets[e.target.name].file = result.file;
 
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
         },
@@ -87,19 +128,15 @@ var app = new Vue({
             this.stendVersion = this.stends[idx].version;
 
             if (this.stends[idx].workgroup) { // если в кармане workgroup текущего стенда есть файл
-                this.files.workgroup = this.stends[idx].workgroup;
-                this.blankBg.workgroup = false; // меняем пустое фоновое изображение на миниатюру .pdf-файла
+                this.pockets.workgroup.file = this.stends[idx].workgroup;
 
             } else {
-                this.files.workgroup = '';
-                this.blankBg.workgroup = true;
+                this.pockets.workgroup.file = '';
             }
             if (this.stends[idx].result5s) {
                 this.files.result5s = this.stends[idx].result5s;
-                this.blankBg.result5s = false;
             } else {
                 this.files.result5s = '';
-                this.blankBg.result5s = true;
             }
             this.files.plan5s = this.stends[idx].plan5s ? this.stends[idx].plan5s : '';
             this.files.best = this.stends[idx].best ? this.stends[idx].best : '';
@@ -114,8 +151,6 @@ var app = new Vue({
 
             if (result.length) {
                 this.deptsList = [...result];
-                // console.log('this.deptsList: ', this.deptsList);
-
             }
         } else {
             console.log(`Ошибка init: ${response.status}`);
