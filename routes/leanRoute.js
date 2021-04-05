@@ -86,7 +86,6 @@ router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
         //  запись в БД имени файла
         // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
         const sql = `UPDATE stends SET ${req.body.pocket}='${newName}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
-        console.log('sql: ', sql);
 
         try {
             connection.query(sql, (err, results) => {

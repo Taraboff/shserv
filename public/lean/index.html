@@ -24,8 +24,7 @@
             <ul class="navbar-nav flex-row justify-content-end px-5">
 
                 <li class="nav-item mx-2 dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDepts" role="button" data-bs-toggle="dropdown" aria-expanded="false">Войти
-          </a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDepts" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ isAuth ? `Цех: ${currentDept.code}` : 'Войти'}}</a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownDepts">
 
@@ -77,8 +76,8 @@
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">Состав рабочих групп
                             <form>
-                                <a :href="`/uploads/${pockets.workgroup.file}`" target="_blank">
-                                    <div :class="['a4', pockets.workgroup.file ? 'bg-workgroup' : 'blue']" >
+                                <a :href="destination + workgroup.file" target="_blank">
+                                    <div :class="['a4', workgroup.file ? 'bg-workgroup' : 'blue']" >
                                         <input type="file" name="workgroup" id="workgroup" class="upload-file__input" @change="upload">
                                         <label for="workgroup" class="upload-file__label">
                                           <div class="add"></div>
@@ -90,7 +89,7 @@
                         <div class="col-2 px-lg-5">Итоги 5С-аудита
                             <form>
                                 <a :href="files.result5s" target="_blank">
-                                    <div class="a4 bg-result5s" :class="{blue: !pockets.workgroup.file}">
+                                    <div class="a4 bg-result5s" :class="{blue: !workgroup.file}">
                                         <div>
                                             <input type="file" name="result5s" id="result5s" class="upload-file__input" ref="result5s_file" @change="upload">
                                             <label for="result5s" class="upload-file__label">
@@ -138,11 +137,10 @@
                             </div>
                             <div class="row mx-5 align-items-center">
 
-                                <!--Место для вставки компонента-->
-                                <div id="lean_foto_1" class="col-5">                                   
-                                    <lean-foto :pocket="pockets.before1" @up="upload"></lean-foto>
+                                <!-- Before1 -->
+                                <div class="col-5">                                   
+                                    <lean-pocket :pocket="before1" :dest='destination' @up="upload"></lean-pocket>
                                 </div> 
-
 
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">

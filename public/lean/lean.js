@@ -1,10 +1,10 @@
 Vue.config.debug = true; 
 Vue.config.devtools = true;
 
-Vue.component('lean-foto', {
+Vue.component('lean-pocket', {
     template: `<form>
-                    <a :href="pocket.file ? '/uploads/' + pocket.file : ''" target="_blank">
-                        <div :class="classList">
+                    <a :href="pocket.file ? dest + pocket.file : ''" target="_blank">
+                        <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
                                 <div class="add"></div>
@@ -17,10 +17,10 @@ Vue.component('lean-foto', {
             format: 'a5'
         }
     },
-    props: ['pocket', 'up'],
+    props: ['pocket', 'up', 'dest'],
     methods: {
-        addfile(e) {
-            this.$emit('up', e);
+        addfile(event) {
+            this.$emit('up', event);
         }
     },
     computed: {
@@ -38,23 +38,22 @@ var app = new Vue({
         currentStend: '',
         stendVersion: '',
         message: '',
-        pockets: {
-            workgroup: {
-                name: 'workgroup',
-                file: '',
-                format: 'a4',
-                thumbclass: 'bg-workgroup',
-                ifempty: 'blue',
-                classes: {
-                    a4: true,
-                    'bg-workgroup': true,
-                    blue: false
-                }
-            },
-            before1: {
-                name: 'before1',
-                file: ''
-            }
+        destination: '/uploads/',
+        targetPocket: '',
+        workgroup: {
+            name: 'workgroup',
+            file: '',
+            format: 'a4',
+            bg: 'bg-workgroup',
+            empty: 'blue',
+        },
+        before1: {
+            name: 'before1',
+            file: '',
+            format: 'a5',
+            bg: 'bg-before1',
+            empty: 'purple'
+        
         },
         files: {
             workgroup: '',
@@ -63,23 +62,14 @@ var app = new Vue({
             best: '',
             before1: './img/before1.jpg'
         },
-        thumbs: {
-            before1: '',
-            after1: '',
-            before2: '',
-            after2: ''
-        },
-        isAuth: true,
+
+        isAuth: false,
         deptsList: [],
         versionsList: []
     },
     methods: {
-        addfoto(e) {
-            console.log('e: ', e);
-            
-        },
         async upload(e) {
-
+            this.targetPocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
 
@@ -97,14 +87,13 @@ var app = new Vue({
             this.message = result.msg;
             console.log(this.message);
 
-            this.files[e.target.name] = result.file;   
-            this.pockets[e.target.name].file = result.file;
-
+            this.$data[this.targetPocket].file = result.file;
+            
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
         },
         async chooseDept(e) {
             this.currentDept = this.deptsList[e.target.dataset.dept];
-
+            this.stendVersion = '';
             this.isAuth = true;
             this.versionsList = [];
             //запрос к БД объекта стендов
@@ -128,10 +117,10 @@ var app = new Vue({
             this.stendVersion = this.stends[idx].version;
 
             if (this.stends[idx].workgroup) { // если в кармане workgroup текущего стенда есть файл
-                this.pockets.workgroup.file = this.stends[idx].workgroup;
+                this.workgroup.file = this.stends[idx].workgroup;
 
             } else {
-                this.pockets.workgroup.file = '';
+                this.workgroup.file = '';
             }
             if (this.stends[idx].result5s) {
                 this.files.result5s = this.stends[idx].result5s;
