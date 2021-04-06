@@ -46,13 +46,17 @@ var app = new Vue({
             format: 'a4',
             bg: 'bg-workgroup',
             empty: 'blue',
+            isImage: false,
+            thumb: ''
         },
         before1: {
             name: 'before1',
             file: '',
             format: 'a5',
             bg: 'bg-before1',
-            empty: 'purple'
+            empty: 'purple',
+            isImage: true,
+            thumb: ''
         
         },
         files: {
@@ -78,6 +82,7 @@ var app = new Vue({
             fData.append('deptId', this.currentDept.id);
             fData.append('pocket', e.target.name);
             fData.append('uploadfile', e.target.files[0]);
+            fData.append('isImage', this.$data[e.target.name].isImage);
 
             let response = await fetch('/upload', {
                 method: 'POST',
@@ -88,6 +93,9 @@ var app = new Vue({
             console.log(this.message);
 
             this.$data[this.targetPocket].file = result.file;
+            if (result.thumb) {
+                this.$data[e.target.name].thumb = result.thumb;
+            }
             
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
         },
@@ -118,10 +126,14 @@ var app = new Vue({
 
             if (this.stends[idx].workgroup) { // если в кармане workgroup текущего стенда есть файл
                 this.workgroup.file = this.stends[idx].workgroup;
+                this.workgroup.thumb = this.stends[idx].workgroup.split('.')[0]+'.thumb.png';
 
             } else {
                 this.workgroup.file = '';
             }
+
+
+            
             if (this.stends[idx].result5s) {
                 this.files.result5s = this.stends[idx].result5s;
             } else {

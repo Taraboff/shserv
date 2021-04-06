@@ -64,7 +64,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storageConfig, fileFilter });
 
 router.get('/loadimage', function(req, res, next) {
-    const pt = path.join(__dirname, '../uploads', '0211.jpg');
+    const pt = path.join(__dirname, '..', 'uploads', '0211.jpg');
     const pt2 = path.join(__dirname, '../uploads', '0211.png');
 
     gm(pt)
@@ -77,19 +77,23 @@ router.get('/loadimage', function(req, res, next) {
 
 router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
     const uploadMsg = {};
+    // console.log('===', req.file);
+
     if (!req.file)
         uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
     else {
+
         uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
-        uploadMsg.file = newName;
+        uploadMsg.file = req.file.filename;   
 
         //  запись в БД имени файла
         // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
-        const sql = `UPDATE stends SET ${req.body.pocket}='${newName}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
+        const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
 
         try {
             connection.query(sql, (err, results) => {
                 if (err) {
+                    uploadMsg.msg = err;
                     console.log(err);
                 } 
                 
@@ -99,7 +103,20 @@ router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
             }
         // После загрузки файла в /uploads и сохранения в БД 
         // создать миниатюру в случае если было загружено изображение
-        
+        if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
+
+            const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
+            const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
+            const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
+
+            gm(inputFile)
+            .resize(320, 230, '!')
+            .write(outputFile, function (err) {
+                if (!err) console.log(`File converted to ${convFileName}`);
+            });
+
+            uploadMsg.thumb = convFileName;
+        }
 
     }
 
