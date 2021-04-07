@@ -72,8 +72,8 @@ section {
 }
 .bg-before1 {
     background: var(--background-thumb);
-    /* backgro    und: url("./img/bg_before1.jpg") no-repeat center top; */
     background-size: 170px 130px;
+    transition: background 2s;
 }
 
 .blue {

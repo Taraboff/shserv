@@ -14,12 +14,6 @@ const connection = mysql.createPool({
     database: 'lean'
 });
 
-const asyncMiddleware = fn =>
-  (req, res, next) => {
-    Promise.resolve(fn(req, res, next))
-      .catch(next);
-  };
-
 const storageConfig = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads");
@@ -70,13 +64,15 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storageConfig, fileFilter });
 
 
-router.post('/upload', upload.single("uploadfile"), asyncMiddleware(async (req, res, next) => {
+router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
     const uploadMsg = {};
-    if (!req.file)
+    if (!req.file) {
         uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
+    }
     else {
         uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
-        uploadMsg.file = req.file.filename;   
+        uploadMsg.file = req.file.filename; 
+          
         //  запись в БД имени файла
         // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
         const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
@@ -90,31 +86,34 @@ router.post('/upload', upload.single("uploadfile"), asyncMiddleware(async (req, 
         } catch (e) {
             console.log(e);
         }
-    }
     
-    if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
+    
+        if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
 
-        const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
-        const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
-        const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
-    
-        let make = function(inputFile) {
+            const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
+            const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
+            const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
+        
             gm(inputFile)
-                .resize(320, 230, '!')
-                .write(outputFile, function (err) {
-                    if (!err) console.log(`File converted to ${convFileName}`);
-                    uploadMsg.thumb = convFileName;
-                    console.log('uploadMsg.thumb: ', uploadMsg.thumb);
-                    
-                });
+                    .resize(320, 230, '!')
+                    .write(outputFile, function (err) {
+                        if (!err) {
+                            console.log(`File converted to ${convFileName}`);
+                        } else {
+                            console.log(err);
+                        }
+                        
+                    });
+                
+            uploadMsg.thumb = convFileName;
+
+            
         }
-        make(inputFile);
-        next();
-    } else {
-        next();
     }
-    res.send(JSON.stringify(uploadMsg));
-}));
+    setTimeout(() => {
+        res.send(JSON.stringify(uploadMsg));
+    },1500);  
+});
 
 
 

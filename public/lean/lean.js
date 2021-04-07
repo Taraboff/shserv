@@ -52,7 +52,7 @@ var app = new Vue({
             bg: 'bg-before1',
             empty: 'purple',
             isImage: true,
-            thumb: 'before1.jpg'
+            thumb: ''
         
         },
         files: {
@@ -95,14 +95,12 @@ var app = new Vue({
 
             this.$data[pocket].file = result.file;
             if (result.thumb) {
-                console.log('result.thumb: ', result.thumb);
                 this.$data[pocket].thumb = result.thumb;
+
             }
             
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
             
-                console.log('forced');
-           
              
         },
         async chooseDept(e) {
