@@ -14,6 +14,12 @@ const connection = mysql.createPool({
     database: 'lean'
 });
 
+const asyncMiddleware = fn =>
+  (req, res, next) => {
+    Promise.resolve(fn(req, res, next))
+      .catch(next);
+  };
+
 const storageConfig = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads");
@@ -63,65 +69,56 @@ const fileFilter = (req, file, cb) => {
 }
 const upload = multer({ storage: storageConfig, fileFilter });
 
-router.get('/loadimage', function(req, res, next) {
-    const pt = path.join(__dirname, '..', 'uploads', '0211.jpg');
-    const pt2 = path.join(__dirname, '../uploads', '0211.png');
 
-    gm(pt)
-    .resize(320, 240, '!')
-    .write(pt2, function (err) {
-        if (!err) console.log('File converting...');
-      });
-    res.send('Resizing image done!');
-});
-
-router.post('/upload', upload.single("uploadfile"), function (req, res, next) {
+router.post('/upload', upload.single("uploadfile"), asyncMiddleware(async (req, res, next) => {
     const uploadMsg = {};
-    // console.log('===', req.file);
-
     if (!req.file)
         uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
     else {
-
         uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
         uploadMsg.file = req.file.filename;   
-
         //  запись в БД имени файла
         // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
         const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
-
         try {
             connection.query(sql, (err, results) => {
                 if (err) {
                     uploadMsg.msg = err;
                     console.log(err);
                 } 
-                
             });
-            } catch (e) {
-                console.log(e);
-            }
-        // После загрузки файла в /uploads и сохранения в БД 
-        // создать миниатюру в случае если было загружено изображение
-        if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
-
-            const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
-            const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
-            const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
-
-            gm(inputFile)
-            .resize(320, 230, '!')
-            .write(outputFile, function (err) {
-                if (!err) console.log(`File converted to ${convFileName}`);
-            });
-
-            uploadMsg.thumb = convFileName;
+        } catch (e) {
+            console.log(e);
         }
-
     }
+    
+    if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
 
+        const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
+        const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
+        const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
+    
+        let make = function(inputFile) {
+            gm(inputFile)
+                .resize(320, 230, '!')
+                .write(outputFile, function (err) {
+                    if (!err) console.log(`File converted to ${convFileName}`);
+                    uploadMsg.thumb = convFileName;
+                    console.log('uploadMsg.thumb: ', uploadMsg.thumb);
+                    
+                });
+        }
+        make(inputFile);
+        next();
+    } else {
+        next();
+    }
     res.send(JSON.stringify(uploadMsg));
-});
+}));
+
+
+
+
 
 router.get('/getstends/:deptId', function (req, res) {
     const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;

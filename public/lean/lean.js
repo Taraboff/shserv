@@ -4,7 +4,7 @@ Vue.config.devtools = true;
 Vue.component('lean-pocket', {
     template: `<form>
                     <a :href="pocket.file ? dest + pocket.file : ''" target="_blank">
-                        <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]">
+                        <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
                                 <div class="add"></div>
@@ -14,32 +14,28 @@ Vue.component('lean-pocket', {
                 </form>`,
     data() {
         return {
-            format: 'a5'
+            
         }
     },
-    props: ['pocket', 'up', 'dest'],
+    props: ['pocket', 'up', 'dest', 'cssvars'],
     methods: {
         addfile(event) {
             this.$emit('up', event);
         }
-    },
-    computed: {
-        classList() {
-            const classes = [this.format, 'purple'];
-            return classes;
-        }
     }
+    
 });
 var app = new Vue({
     el: '#app',
     data: {
+        deptsList: [],
         currentDept: {},
         stends: [],
+        versionsList: [],
         currentStend: '',
         stendVersion: '',
         message: '',
         destination: '/uploads/',
-        targetPocket: '',
         workgroup: {
             name: 'workgroup',
             file: '',
@@ -47,7 +43,7 @@ var app = new Vue({
             bg: 'bg-workgroup',
             empty: 'blue',
             isImage: false,
-            thumb: ''
+            thumb: 'bg_workgroup.jpg'
         },
         before1: {
             name: 'before1',
@@ -56,7 +52,7 @@ var app = new Vue({
             bg: 'bg-before1',
             empty: 'purple',
             isImage: true,
-            thumb: ''
+            thumb: 'before1.jpg'
         
         },
         files: {
@@ -64,25 +60,30 @@ var app = new Vue({
             result5s: '',
             plan5s: '',
             best: '',
-            before1: './img/before1.jpg'
+            before1: './before1.jpg'
         },
 
-        isAuth: false,
-        deptsList: [],
-        versionsList: []
+        isAuth: false
+    },
+    computed: {
+        dynamiccss() {
+            return { workgroup: { '--background-thumb' : `url("./img/${this.workgroup.thumb}") no-repeat center top` },
+            before1: { '--background-thumb' : `url("../uploads/thumbs/${this.before1.thumb}") no-repeat center top` }
+        }
+        }
     },
     methods: {
         async upload(e) {
-            this.targetPocket = e.target.name;
+            const pocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
 
             fData.append('stend', this.stendVersion);
             fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
             fData.append('deptId', this.currentDept.id);
-            fData.append('pocket', e.target.name);
+            fData.append('pocket', pocket);
             fData.append('uploadfile', e.target.files[0]);
-            fData.append('isImage', this.$data[e.target.name].isImage);
+            fData.append('isImage', this.$data[pocket].isImage);
 
             let response = await fetch('/upload', {
                 method: 'POST',
@@ -92,12 +93,17 @@ var app = new Vue({
             this.message = result.msg;
             console.log(this.message);
 
-            this.$data[this.targetPocket].file = result.file;
+            this.$data[pocket].file = result.file;
             if (result.thumb) {
-                this.$data[e.target.name].thumb = result.thumb;
+                console.log('result.thumb: ', result.thumb);
+                this.$data[pocket].thumb = result.thumb;
             }
             
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
+            
+                console.log('forced');
+           
+             
         },
         async chooseDept(e) {
             this.currentDept = this.deptsList[e.target.dataset.dept];
