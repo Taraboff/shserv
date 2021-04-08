@@ -40,35 +40,127 @@ var app = new Vue({
             name: 'workgroup',
             file: '',
             format: 'a4',
-            bg: 'bg-workgroup',
+            bg: 'bg-a4',
             empty: 'blue',
-            isImage: false,
-            thumb: 'bg_workgroup.jpg'
+            isImage: true,
+            thumb: ''
+        },
+        result5s: {
+            name: 'result5s',
+            file: '',
+            format: 'a4',
+            bg: 'bg-a4',
+            empty: 'blue',
+            isImage: true,
+            thumb: ''
+        },
+        plan5s: {
+            name: 'plan5s',
+            file: '',
+            format: 'a4',
+            bg: 'bg-a4',
+            empty: 'green',
+            isImage: true,
+            thumb: ''
+        },
+        best: {
+            name: 'best',
+            file: '',
+            format: 'a4',
+            bg: 'bg-a4',
+            empty: 'green',
+            isImage: true,
+            thumb: ''
         },
         before1: {
             name: 'before1',
             file: '',
             format: 'a5',
-            bg: 'bg-before1',
+            bg: 'bg-foto',
             empty: 'purple',
             isImage: true,
             thumb: ''
-        
         },
-        files: {
-            workgroup: '',
-            result5s: '',
-            plan5s: '',
-            best: '',
-            before1: './before1.jpg'
+        after1: {
+            name: 'after1',
+            file: '',
+            format: 'a5',
+            bg: 'bg-foto',
+            empty: 'green',
+            isImage: true,
+            thumb: ''
         },
-
+        before2: {
+            name: 'before2',
+            file: '',
+            format: 'a5',
+            bg: 'bg-foto',
+            empty: 'purple',
+            isImage: true,
+            thumb: ''
+        },
+        after2: {
+            name: 'after2',
+            file: '',
+            format: 'a5',
+            bg: 'bg-foto',
+            empty: 'green',
+            isImage: true,
+            thumb: ''
+        },
+        params: {
+            name: 'params',
+            file: '',
+            format: 'a4r',
+            bg: 'bg-a4r',
+            empty: 'orange',
+            isImage: true,
+            thumb: ''
+        },
+        graphics5s: {
+            name: 'graphics5s',
+            file: '',
+            format: 'a4r',
+            bg: 'bg-a4r',
+            empty: 'orange',
+            isImage: true,
+            thumb: ''
+        },
+        projects: {
+            name: 'projects',
+            file: '',
+            format: 'a4r',
+            bg: 'bg-a4r',
+            empty: 'purple',
+            isImage: true,
+            thumb: ''
+        },
+        techcards: {
+            name: 'techcards',
+            file: '',
+            format: 'a4r',
+            bg: 'bg-a4r',
+            empty: 'purple',
+            isImage: true,
+            thumb: ''
+        },
         isAuth: false
     },
     computed: {
         dynamiccss() {
-            return { workgroup: { '--background-thumb' : `url("./img/${this.workgroup.thumb}") no-repeat center top` },
-            before1: { '--background-thumb' : `url("../uploads/thumbs/${this.before1.thumb}") no-repeat center top` }
+            return { workgroup: { '--background-thumb' : `url("../uploads/thumbs/${this.workgroup.thumb}") no-repeat center top` },
+                result5s: { '--background-thumb' : `url("../uploads/thumbs/${this.result5s.thumb}") no-repeat center top` },
+                plan5s: { '--background-thumb' : `url("../uploads/thumbs/${this.plan5s.thumb}") no-repeat center top` },
+                best: { '--background-thumb' : `url("../uploads/thumbs/${this.best.thumb}") no-repeat center top` },
+                before1: { '--background-thumb' : `url("../uploads/thumbs/${this.before1.thumb}") no-repeat center top` },
+                after1: { '--background-thumb' : `url("../uploads/thumbs/${this.after1.thumb}") no-repeat center top` },
+                before2: { '--background-thumb' : `url("../uploads/thumbs/${this.before2.thumb}") no-repeat center top` },
+                after2: { '--background-thumb' : `url("../uploads/thumbs/${this.after2.thumb}") no-repeat center top` },
+                params: { '--background-thumb' : `url("../uploads/thumbs/${this.params.thumb}") no-repeat center top` },
+                graphics5s: { '--background-thumb' : `url("../uploads/thumbs/${this.graphics5s.thumb}") no-repeat center top` },
+                projects: { '--background-thumb' : `url("../uploads/thumbs/${this.projects.thumb}") no-repeat center top` },
+                techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.techcards.thumb}") no-repeat center top` }
+
         }
         }
     },
@@ -118,33 +210,29 @@ var app = new Vue({
 
                     }
                     this.stends = [...result];
-                    
-
                 }
 
             }
         },
         chooseStendVersion(idx) {
-            this.currentStend = idx;
-            this.stendVersion = this.stends[idx].version;
+            this.currentStend = idx;                        // порядковый номер стренда текущего подразделения
+            this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
 
-            if (this.stends[idx].workgroup) { // если в кармане workgroup текущего стенда есть файл
-                this.workgroup.file = this.stends[idx].workgroup;
-                this.workgroup.thumb = this.stends[idx].workgroup.split('.')[0]+'.thumb.png';
+            // перебор объекта this.stends[idx] - текущего стенда
 
-            } else {
-                this.workgroup.file = '';
-            }
+            const obj = this.stends[idx];
+            for (let key in obj) {
+                if (key != 'id' && key != 'dept' && key != 'version') {
+                    if (obj[key]) {
+                        this.$data[key].file = obj[key];
+                        this.$data[key].thumb = obj[key].split('.')[0] + '.thumb.png';
+                    } else {
+                        this.$data[key].file = '';
+                    }
 
+                }
+            } 
 
-            
-            if (this.stends[idx].result5s) {
-                this.files.result5s = this.stends[idx].result5s;
-            } else {
-                this.files.result5s = '';
-            }
-            this.files.plan5s = this.stends[idx].plan5s ? this.stends[idx].plan5s : '';
-            this.files.best = this.stends[idx].best ? this.stends[idx].best : '';
         }
     },
     async created() {

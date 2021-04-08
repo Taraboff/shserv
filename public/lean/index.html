@@ -75,58 +75,16 @@
                 <section>
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">Состав рабочих групп
-                            <form>
-                                <a :href="uploaddir + workgroup.file" target="_blank">
-                                    <div :class="['a4', workgroup.file ? 'bg-workgroup' : 'blue']" >
-                                        <input type="file" name="workgroup" id="workgroup" class="upload-file__input" @change="upload">
-                                        <label for="workgroup" class="upload-file__label">
-                                          <div class="add"></div>
-                                        </label>
-                                    </div>
-                                </a>
-                            </form>
+                            <lean-pocket :pocket="workgroup" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.workgroup"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Итоги 5С-аудита
-                            <form>
-                                <a :href="files.result5s" target="_blank">
-                                    <div class="a4 bg-result5s" :class="{blue: !workgroup.file}">
-                                        <div>
-                                            <input type="file" name="result5s" id="result5s" class="upload-file__input" ref="result5s_file" @change="upload">
-                                            <label for="result5s" class="upload-file__label">
-                                                <div class="add"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </a>
-                            </form>
+                            <lean-pocket :pocket="result5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.result5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">План применения 5С
-                            <form>
-                                <a :href="files.plan5s" target="_blank">
-                                    <div class="a4 green bg-plan5s">
-                                        <div>
-                                            <input type="file" name="plan5s" id="plan5s" class="upload-file__input" ref="plan5s_file" @change="upload">
-                                            <label for="plan5s" class="upload-file__label">
-                                                <div class="add"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </a>
-                            </form>
+                            <lean-pocket :pocket="plan5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.plan5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Лучшее рабочее место
-                            <form>
-                                <a :href="files.best" target="_blank">
-                                    <div class="a4 green bg-best">
-                                        <div>
-                                            <input type="file" name="best" id="best" class="upload-file__input" ref="best_file" @change="upload">
-                                            <label for="best" class="upload-file__label">
-                                                <div class="add"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </a>
-                            </form>
+                            <lean-pocket :pocket="best" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.best"></lean-pocket>
                         </div>
 
                         <div class="col-4">
@@ -144,22 +102,16 @@
 
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <div class="a5 green">
-                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                                    </div>
+                                    <lean-pocket :pocket="after1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after1"></lean-pocket>
                                 </div>
                             </div>
                             <div class="row mx-5 align-items-center">
                                 <div class="col-5">
-                                    <div class="a5 purple">
-                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                                    </div>
+                                    <lean-pocket :pocket="before2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before2"></lean-pocket>
                                 </div>
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <div class="a5 green d-flex align-items-center justify-content-center">
-                                        <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                                    </div>
+                                    <lean-pocket :pocket="after2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after2"></lean-pocket>
                                 </div>
                             </div>
                         </div>
@@ -169,24 +121,16 @@
                 <section>
                     <div class="row align-items-end text-center mt-5">
                         <div class="col-3 px-lg-5">Производственные показатели
-                            <div class="a4r orange d-flex align-items-center justify-content-center">
-                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                            </div>
+                            <lean-pocket :pocket="params" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.params"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">График 5С-аудита
-                            <div class="a4r orange d-flex align-items-center justify-content-center">
-                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                            </div>
+                            <lean-pocket :pocket="graphics5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.graphics5s"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Перечень проектов и потерь
-                            <div class="a4r purple d-flex align-items-center justify-content-center">
-                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                            </div>
+                            <lean-pocket :pocket="projects" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.projects"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Технологические карты
-                            <div class="a4r purple d-flex align-items-center justify-content-center">
-                                <a href="#"><img class="add" src="./img/plus.png" alt="add document"></a>
-                            </div>
+                            <lean-pocket :pocket="techcards" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.techcards"></lean-pocket>
                         </div>
                     </div>
                 </section>

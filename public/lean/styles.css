@@ -61,16 +61,18 @@ section {
     cursor: pointer;
 }
 
-.bg-workgroup {
-    background: url("./img/bg_workgroup.jpg") no-repeat center top;
+.bg-a4 {
+    background: var(--background-thumb);
     background-size: 210px 320px;
+    transition: background 0.2s;
 }
 
-.bg-result5s {
-    background: url("./img/bg_result5s.jpg") no-repeat center top;
-    background-size: 210px 320px;
+.bg-a4r {
+    background: var(--background-thumb);
+    background-size: 320px 210px;
+    transition: background 0.2s;
 }
-.bg-before1 {
+.bg-foto {
     background: var(--background-thumb);
     background-size: 170px 130px;
     transition: background 0.2s;

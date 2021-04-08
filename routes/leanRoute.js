@@ -94,7 +94,7 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
         
             gm(inputFile)
-                    .resize(210, 320, '!')
+                    .resize(350, 210, '!')
                     .write(outputFile, function (err) {
                         if (!err) {
                             console.log(`File converted to ${convFileName}`);
