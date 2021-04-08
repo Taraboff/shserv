@@ -5,7 +5,7 @@ const fs = require('fs');
 const gm = require('gm');
 const path = require('path');
 const mysql = require('mysql2');
-let newName, errMsg;
+let newName, errMsg, uploadMsg;
 
 const connection = mysql.createPool({
     host: 'localhost',
@@ -65,7 +65,7 @@ const upload = multer({ storage: storageConfig, fileFilter });
 
 
 router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
-    const uploadMsg = {};
+    uploadMsg = {};
     if (!req.file) {
         uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
     }
@@ -87,18 +87,18 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             console.log(e);
         }
     
-    
-        if (req.body.isImage) {  // если тип pocket = isImage, сделать resize и сохранить эскиз
+        if (req.body.isImage === 'true') {  // если тип pocket = isImage, сделать resize и сохранить эскиз
 
             const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
             const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
             const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
         
             gm(inputFile)
-                    .resize(320, 230, '!')
+                    .resize(210, 320, '!')
                     .write(outputFile, function (err) {
                         if (!err) {
                             console.log(`File converted to ${convFileName}`);
+                            res.send(JSON.stringify(uploadMsg));
                         } else {
                             console.log(err);
                         }
@@ -109,10 +109,11 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
 
             
         }
+        else {
+            res.send(JSON.stringify(uploadMsg));
+        }
     }
-    setTimeout(() => {
-        res.send(JSON.stringify(uploadMsg));
-    },1500);  
+  
 });
 
 

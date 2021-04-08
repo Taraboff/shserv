@@ -76,7 +76,7 @@
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">Состав рабочих групп
                             <form>
-                                <a :href="destination + workgroup.file" target="_blank">
+                                <a :href="uploaddir + workgroup.file" target="_blank">
                                     <div :class="['a4', workgroup.file ? 'bg-workgroup' : 'blue']" >
                                         <input type="file" name="workgroup" id="workgroup" class="upload-file__input" @change="upload">
                                         <label for="workgroup" class="upload-file__label">
@@ -139,7 +139,7 @@
 
                                 <!-- Before1 -->
                                 <div class="col-5">                                   
-                                    <lean-pocket :pocket="before1" :dest='destination' @up="upload" :cssvars="dynamiccss.before1"></lean-pocket>
+                                    <lean-pocket :pocket="before1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before1"></lean-pocket>
                                 </div> 
 
                                 <div class="col-2">⪢⪢⪢</div>

@@ -35,7 +35,7 @@ var app = new Vue({
         currentStend: '',
         stendVersion: '',
         message: '',
-        destination: '/uploads/',
+        uploaddir: '/uploads/',
         workgroup: {
             name: 'workgroup',
             file: '',

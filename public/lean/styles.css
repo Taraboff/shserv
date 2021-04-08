@@ -73,7 +73,7 @@ section {
 .bg-before1 {
     background: var(--background-thumb);
     background-size: 170px 130px;
-    transition: background 2s;
+    transition: background 0.2s;
 }
 
 .blue {
