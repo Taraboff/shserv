@@ -36,130 +36,131 @@ var app = new Vue({
         stendVersion: '',
         message: '',
         uploaddir: '/uploads/',
-        workgroup: {
-            name: 'workgroup',
-            file: '',
-            format: 'a4',
-            bg: 'bg-a4',
-            empty: 'blue',
-            isImage: true,
-            thumb: ''
-        },
-        result5s: {
-            name: 'result5s',
-            file: '',
-            format: 'a4',
-            bg: 'bg-a4',
-            empty: 'blue',
-            isImage: true,
-            thumb: ''
-        },
-        plan5s: {
-            name: 'plan5s',
-            file: '',
-            format: 'a4',
-            bg: 'bg-a4',
-            empty: 'green',
-            isImage: true,
-            thumb: ''
-        },
-        best: {
-            name: 'best',
-            file: '',
-            format: 'a4',
-            bg: 'bg-a4',
-            empty: 'green',
-            isImage: true,
-            thumb: ''
-        },
-        before1: {
-            name: 'before1',
-            file: '',
-            format: 'a5',
-            bg: 'bg-foto',
-            empty: 'purple',
-            isImage: true,
-            thumb: ''
-        },
-        after1: {
-            name: 'after1',
-            file: '',
-            format: 'a5',
-            bg: 'bg-foto',
-            empty: 'green',
-            isImage: true,
-            thumb: ''
-        },
-        before2: {
-            name: 'before2',
-            file: '',
-            format: 'a5',
-            bg: 'bg-foto',
-            empty: 'purple',
-            isImage: true,
-            thumb: ''
-        },
-        after2: {
-            name: 'after2',
-            file: '',
-            format: 'a5',
-            bg: 'bg-foto',
-            empty: 'green',
-            isImage: true,
-            thumb: ''
-        },
-        params: {
-            name: 'params',
-            file: '',
-            format: 'a4r',
-            bg: 'bg-a4r',
-            empty: 'orange',
-            isImage: true,
-            thumb: ''
-        },
-        graphics5s: {
-            name: 'graphics5s',
-            file: '',
-            format: 'a4r',
-            bg: 'bg-a4r',
-            empty: 'orange',
-            isImage: true,
-            thumb: ''
-        },
-        projects: {
-            name: 'projects',
-            file: '',
-            format: 'a4r',
-            bg: 'bg-a4r',
-            empty: 'purple',
-            isImage: true,
-            thumb: ''
-        },
-        techcards: {
-            name: 'techcards',
-            file: '',
-            format: 'a4r',
-            bg: 'bg-a4r',
-            empty: 'purple',
-            isImage: true,
-            thumb: ''
-        },
+        pockets: { workgroup: {
+                        name: 'workgroup',
+                        file: '',
+                        format: 'a4',
+                        bg: 'bg-a4',
+                        empty: 'blue',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    result5s: {
+                        name: 'result5s',
+                        file: '',
+                        format: 'a4',
+                        bg: 'bg-a4',
+                        empty: 'blue',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    plan5s: {
+                        name: 'plan5s',
+                        file: '',
+                        format: 'a4',
+                        bg: 'bg-a4',
+                        empty: 'green',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    best: {
+                        name: 'best',
+                        file: '',
+                        format: 'a4',
+                        bg: 'bg-a4',
+                        empty: 'green',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    before1: {
+                        name: 'before1',
+                        file: '',
+                        format: 'a5',
+                        bg: 'bg-foto',
+                        empty: 'purple',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    after1: {
+                        name: 'after1',
+                        file: '',
+                        format: 'a5',
+                        bg: 'bg-foto',
+                        empty: 'green',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    before2: {
+                        name: 'before2',
+                        file: '',
+                        format: 'a5',
+                        bg: 'bg-foto',
+                        empty: 'purple',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    after2: {
+                        name: 'after2',
+                        file: '',
+                        format: 'a5',
+                        bg: 'bg-foto',
+                        empty: 'green',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    params: {
+                        name: 'params',
+                        file: '',
+                        format: 'a4r',
+                        bg: 'bg-a4r',
+                        empty: 'orange',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    graphics5s: {
+                        name: 'graphics5s',
+                        file: '',
+                        format: 'a4r',
+                        bg: 'bg-a4r',
+                        empty: 'orange',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    projects: {
+                        name: 'projects',
+                        file: '',
+                        format: 'a4r',
+                        bg: 'bg-a4r',
+                        empty: 'purple',
+                        isImage: true,
+                        thumb: ''
+                    },
+                    techcards: {
+                        name: 'techcards',
+                        file: '',
+                        format: 'a4r',
+                        bg: 'bg-a4r',
+                        empty: 'purple',
+                        isImage: true,
+                        thumb: ''
+                    }
+    },
         isAuth: false
     },
     computed: {
         dynamiccss() {
-            return { workgroup: { '--background-thumb' : `url("../uploads/thumbs/${this.workgroup.thumb}") no-repeat center top` },
-                result5s: { '--background-thumb' : `url("../uploads/thumbs/${this.result5s.thumb}") no-repeat center top` },
-                plan5s: { '--background-thumb' : `url("../uploads/thumbs/${this.plan5s.thumb}") no-repeat center top` },
-                best: { '--background-thumb' : `url("../uploads/thumbs/${this.best.thumb}") no-repeat center top` },
-                before1: { '--background-thumb' : `url("../uploads/thumbs/${this.before1.thumb}") no-repeat center top` },
-                after1: { '--background-thumb' : `url("../uploads/thumbs/${this.after1.thumb}") no-repeat center top` },
-                before2: { '--background-thumb' : `url("../uploads/thumbs/${this.before2.thumb}") no-repeat center top` },
-                after2: { '--background-thumb' : `url("../uploads/thumbs/${this.after2.thumb}") no-repeat center top` },
-                params: { '--background-thumb' : `url("../uploads/thumbs/${this.params.thumb}") no-repeat center top` },
-                graphics5s: { '--background-thumb' : `url("../uploads/thumbs/${this.graphics5s.thumb}") no-repeat center top` },
-                projects: { '--background-thumb' : `url("../uploads/thumbs/${this.projects.thumb}") no-repeat center top` },
-                techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.techcards.thumb}") no-repeat center top` }
+            return { workgroup: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.workgroup.thumb}") no-repeat center top` },
+                result5s: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.result5s.thumb}") no-repeat center top` },
+                plan5s: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.plan5s.thumb}") no-repeat center top` },
+                best: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.best.thumb}") no-repeat center top` },
+                before1: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.before1.thumb}") no-repeat center top` },
+                after1: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.after1.thumb}") no-repeat center top` },
+                before2: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.before2.thumb}") no-repeat center top` },
+                after2: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.after2.thumb}") no-repeat center top` },
+                params: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.params.thumb}") no-repeat center top` },
+                graphics5s: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.graphics5s.thumb}") no-repeat center top` },
+                projects: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.projects.thumb}") no-repeat center top` },
+                techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.techcards.thumb}") no-repeat center top` }
 
         }
         }
@@ -175,7 +176,8 @@ var app = new Vue({
             fData.append('deptId', this.currentDept.id);
             fData.append('pocket', pocket);
             fData.append('uploadfile', e.target.files[0]);
-            fData.append('isImage', this.$data[pocket].isImage);
+            fData.append('isImage', this.$data.pockets[pocket].isImage);
+            fData.append('format', this.$data.pockets[pocket].format);
 
             let response = await fetch('/upload', {
                 method: 'POST',
@@ -185,9 +187,9 @@ var app = new Vue({
             this.message = result.msg;
             console.log(this.message);
 
-            this.$data[pocket].file = result.file;
+            this.$data.pockets[pocket].file = result.file;
             if (result.thumb) {
-                this.$data[pocket].thumb = result.thumb;
+                this.$data.pockets[pocket].thumb = result.thumb;
 
             }
             
@@ -211,7 +213,10 @@ var app = new Vue({
                     }
                     this.stends = [...result];
                 }
-
+                // обновить стенд
+                for (let pocket in this.pockets) {
+                    this.pockets[pocket].file = '';
+                }
             }
         },
         chooseStendVersion(idx) {
@@ -220,14 +225,16 @@ var app = new Vue({
 
             // перебор объекта this.stends[idx] - текущего стенда
 
+            // функция обновления содержимого стенда
+
             const obj = this.stends[idx];
             for (let key in obj) {
                 if (key != 'id' && key != 'dept' && key != 'version') {
                     if (obj[key]) {
-                        this.$data[key].file = obj[key];
-                        this.$data[key].thumb = obj[key].split('.')[0] + '.thumb.png';
+                        this.$data.pockets[key].file = obj[key];
+                        this.$data.pockets[key].thumb = obj[key].split('.')[0] + '.thumb.png';
                     } else {
-                        this.$data[key].file = '';
+                        this.$data.pockets[key].file = '';
                     }
 
                 }

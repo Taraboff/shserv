@@ -92,9 +92,13 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
             const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
             const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
-        
+            const formats = {'a4': {'width': 180, 'height': 290},
+                            'a4r': {'width': 300, 'height': 180},
+                            'a5': {'width': 130, 'height': 100} };
+            size = formats[req.body.format];
+
             gm(inputFile)
-                    .resize(350, 210, '!')
+                    .resize(size.width, size.height, '!')
                     .write(outputFile, function (err) {
                         if (!err) {
                             console.log(`File converted to ${convFileName}`);

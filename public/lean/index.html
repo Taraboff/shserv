@@ -21,7 +21,7 @@
             <a href="#" class="navbar-brand"><img src="img/RZD_logo.png" alt="logo" class="logo"></a>
             <span class="title">Электронный стенд бережливого производства Петропавловской дистанции сигнализации и
         связи</span>
-            <ul class="navbar-nav flex-row justify-content-end px-5">
+            <ul class="navbar-nav flex-row">
 
                 <li class="nav-item mx-2 dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDepts" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ isAuth ? `Цех: ${currentDept.code}` : 'Войти'}}</a>
@@ -41,7 +41,7 @@
                 </li>
 
 
-                <li class="nav-item mx-2 dropdown">
+                <li class="nav-item mx-2 dropdown" v-if="isAuth">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Версия стенда
           </a>
@@ -60,7 +60,7 @@
 
 
                 <li class="navbar-item mx-2" v-if="isAuth">
-                    <a href="#" class="nav-link" v-if="stendVersion">v.{{ stendVersion }}</a>
+                    <a href="#" class="nav-link" v-if="stendVersion"><b>v.{{ stendVersion }}</b></a>
                 </li>
             </ul>
         </nav>
@@ -75,16 +75,16 @@
                 <section>
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">Состав рабочих групп
-                            <lean-pocket :pocket="workgroup" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.workgroup"></lean-pocket>
+                            <lean-pocket :pocket="pockets.workgroup" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.workgroup"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Итоги 5С-аудита
-                            <lean-pocket :pocket="result5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.result5s"></lean-pocket>
+                            <lean-pocket :pocket="pockets.result5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.result5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">План применения 5С
-                            <lean-pocket :pocket="plan5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.plan5s"></lean-pocket>
+                            <lean-pocket :pocket="pockets.plan5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.plan5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Лучшее рабочее место
-                            <lean-pocket :pocket="best" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.best"></lean-pocket>
+                            <lean-pocket :pocket="pockets.best" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.best"></lean-pocket>
                         </div>
 
                         <div class="col-4">
@@ -97,21 +97,21 @@
 
                                 <!-- Before1 -->
                                 <div class="col-5">                                   
-                                    <lean-pocket :pocket="before1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before1"></lean-pocket>
+                                    <lean-pocket :pocket="pockets.before1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before1"></lean-pocket>
                                 </div> 
 
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <lean-pocket :pocket="after1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after1"></lean-pocket>
+                                    <lean-pocket :pocket="pockets.after1" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after1"></lean-pocket>
                                 </div>
                             </div>
                             <div class="row mx-5 align-items-center">
                                 <div class="col-5">
-                                    <lean-pocket :pocket="before2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before2"></lean-pocket>
+                                    <lean-pocket :pocket="pockets.before2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.before2"></lean-pocket>
                                 </div>
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <lean-pocket :pocket="after2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after2"></lean-pocket>
+                                    <lean-pocket :pocket="pockets.after2" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.after2"></lean-pocket>
                                 </div>
                             </div>
                         </div>
@@ -121,16 +121,16 @@
                 <section>
                     <div class="row align-items-end text-center mt-5">
                         <div class="col-3 px-lg-5">Производственные показатели
-                            <lean-pocket :pocket="params" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.params"></lean-pocket>
+                            <lean-pocket :pocket="pockets.params" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.params"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">График 5С-аудита
-                            <lean-pocket :pocket="graphics5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.graphics5s"></lean-pocket>
+                            <lean-pocket :pocket="pockets.graphics5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.graphics5s"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Перечень проектов и потерь
-                            <lean-pocket :pocket="projects" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.projects"></lean-pocket>
+                            <lean-pocket :pocket="pockets.projects" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.projects"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Технологические карты
-                            <lean-pocket :pocket="techcards" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.techcards"></lean-pocket>
+                            <lean-pocket :pocket="pockets.techcards" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.techcards"></lean-pocket>
                         </div>
                     </div>
                 </section>
