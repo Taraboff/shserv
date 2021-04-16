@@ -1,4 +1,13 @@
 let datas;
+const Rors = { template: '<div>РОРС</div>' }
+const routes = [
+    { path: '/tel' },
+    { path: '/rors', component: Rors }
+  ];
+let router = new VueRouter({
+    routes
+});
+console.log('router: ', router);
 
 var app = new Vue({
     el: '#app',

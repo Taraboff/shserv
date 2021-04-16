@@ -19,8 +19,8 @@ Vue.component('lean-pocket', {
     },
     props: ['pocket', 'up', 'dest', 'cssvars'],
     methods: {
-        addfile(event) {
-            this.$emit('up', event);
+        addfile(e) {
+            this.$emit('up', e);
         }
     }
     
@@ -167,6 +167,8 @@ var app = new Vue({
     },
     methods: {
         async upload(e) {
+
+            console.log('e.target: ', e.target);
             const pocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
