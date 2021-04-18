@@ -8,6 +8,7 @@ Vue.component('lean-pocket', {
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
                                 <div class="add"></div>
+                                
                             </label>
                         </div>
                     </a>
@@ -25,6 +26,18 @@ Vue.component('lean-pocket', {
     }
     
 });
+Vue.component('lean-footer', {
+    template: `<div class="footer">
+                    <p>Версия: {{ this.version }} | {{ this.date }}</p>
+                </div>`,
+    data() {
+        return {
+            version: '0.8.2',
+            date: '18.04.2021 г.'
+        }
+    }
+});
+
 var app = new Vue({
     el: '#app',
     data: {
@@ -168,10 +181,24 @@ var app = new Vue({
     methods: {
         async upload(e) {
 
-            console.log('e.target: ', e.target);
+            // console.log('e.target: ', e.target);
             const pocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
+
+           
+            let timer = 0;
+            while (timer < 100) {
+                const progressTimer = setTimeout(() => {
+                    timer++;
+                    console.log('timer: ', timer);
+                    return 
+                },50);
+                document.querySelector('.progress-bar').style.width = `${progressTimer}%`
+                
+            }
+
+            // document.querySelector('.progress-bar').style.width = '100%';
 
             fData.append('stend', this.stendVersion);
             fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
@@ -194,9 +221,9 @@ var app = new Vue({
                 this.$data.pockets[pocket].thumb = result.thumb;
 
             }
-            
+            document.querySelector('.progress-bar').style.width = '100%';
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
-            
+            document.querySelector('.progress-bar').style.width = '0%';
              
         },
         async chooseDept(e) {
@@ -229,16 +256,15 @@ var app = new Vue({
 
             // функция обновления содержимого стенда
 
-            const obj = this.stends[idx];
-            for (let key in obj) {
-                if (key != 'id' && key != 'dept' && key != 'version') {
-                    if (obj[key]) {
-                        this.$data.pockets[key].file = obj[key];
-                        this.$data.pockets[key].thumb = obj[key].split('.')[0] + '.thumb.png';
+            const stend = this.stends[idx];
+            for (let pocket in stend) {
+                if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
+                    if (stend[pocket]) {
+                        this.$data.pockets[pocket].file = stend[pocket];
+                        this.$data.pockets[pocket].thumb = stend[pocket].split('.')[0] + '.thumb.png';
                     } else {
-                        this.$data.pockets[key].file = '';
+                        this.$data.pockets[pocket].file = '';
                     }
-
                 }
             } 
 

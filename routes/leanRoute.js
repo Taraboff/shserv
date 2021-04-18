@@ -58,6 +58,7 @@ const fileFilter = (req, file, cb) => {
     }
     else {
         errMsg = 'Неверный тип документа';
+        req.fileValidationError = 'Неверный тип документа!';
         cb(null, false);
     }
 }
@@ -66,57 +67,58 @@ const upload = multer({ storage: storageConfig, fileFilter });
 
 router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
     uploadMsg = {};
-    if (!req.file) {
-        uploadMsg.msg = `Ошибка при загрузке файла. ${errMsg}`;
+
+    if (req.fileValidationError) {
+        uploadMsg.msg = req.fileValidationError;
+        return res.send(JSON.stringify(uploadMsg));
     }
-    else {
-        uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
-        uploadMsg.file = req.file.filename; 
-          
-        //  запись в БД имени файла
-        // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
-        const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
-        try {
-            connection.query(sql, (err, results) => {
-                if (err) {
-                    uploadMsg.msg = err;
-                    console.log(err);
-                } 
-            });
-        } catch (e) {
-            console.log(e);
-        }
+    else if (!req.file) {
+        uploadMsg.msg = 'Пожалуйста, выберите файл для загрузки';
+        return res.send(JSON.stringify(uploadMsg));
+    }
     
-        if (req.body.isImage === 'true') {  // если тип pocket = isImage, сделать resize и сохранить эскиз
-
-            const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
-            const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
-            const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
-            const formats = {'a4': {'width': 180, 'height': 290},
-                            'a4r': {'width': 300, 'height': 180},
-                            'a5': {'width': 130, 'height': 100} };
-            size = formats[req.body.format];
-
-            gm(inputFile)
-                    .resize(size.width, size.height, '!')
-                    .write(outputFile, function (err) {
-                        if (!err) {
-                            console.log(`File converted to ${convFileName}`);
-                            res.send(JSON.stringify(uploadMsg));
-                        } else {
-                            console.log(err);
-                        }
-                        
-                    });
-                
-            uploadMsg.thumb = convFileName;
-
-            
-        }
-        else {
-            res.send(JSON.stringify(uploadMsg));
-        }
+    uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
+    uploadMsg.file = req.file.filename; 
+        
+    //  запись в БД имени файла
+    // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
+    const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
+    try {
+        connection.query(sql, (err, results) => {
+            if (err) {
+                uploadMsg.msg = `Ошибка записи в базу данных: ${err}`;
+                console.log(err);
+                return res.send(uploadMsg.msg);
+            } 
+        });
+    } catch (e) {
+        console.log(e);
     }
+
+        const convFileName = req.file.filename.split('.')[0] + '.thumb.png';
+        const inputFile = path.join(__dirname, '..', 'uploads', req.file.filename);
+        const outputFile = path.join(__dirname, '..', 'uploads', 'thumbs', convFileName);
+        const formats = {'a4': {'width': 180, 'height': 290},
+                        'a4r': {'width': 300, 'height': 180},
+                        'a5': {'width': 135, 'height': 100} };
+        size = formats[req.body.format];
+
+        gm(inputFile)
+            .resize(size.width, size.height, '!')
+            .write(outputFile, function (err) {
+                if (!err) {
+                    console.log(`File converted to ${convFileName}`);
+                    res.send(JSON.stringify(uploadMsg));
+                } else {
+                    console.log(err);
+                    return res.send(err);
+                }
+                
+            });
+            
+        uploadMsg.thumb = convFileName;
+
+        
   
 });
 

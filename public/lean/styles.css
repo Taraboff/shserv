@@ -69,12 +69,12 @@ section {
 
 .bg-a4r {
     background: var(--background-thumb);
-    background-size: 340px 210px;
+    background-size: 352px 210px;
     transition: background 0.2s;
 }
 .bg-foto {
     background: var(--background-thumb);
-    background-size: 170px 130px;
+    background-size: 175px 130px;
     transition: background 0.2s;
 }
 
@@ -173,4 +173,11 @@ section {
 
 .transparent {
     opacity: 1;
+}
+
+.footer {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    font-size: 0.9em;
 }
