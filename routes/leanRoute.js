@@ -57,7 +57,7 @@ const fileFilter = (req, file, cb) => {
         cb(null, true);
     }
     else {
-        errMsg = 'Неверный тип документа';
+        // errMsg = 'Неверный тип документа';
         req.fileValidationError = 'Неверный тип документа!';
         cb(null, false);
     }

@@ -158,7 +158,8 @@ var app = new Vue({
                         thumb: ''
                     }
     },
-        isAuth: false
+        isAuth: false,
+        progress: 0
     },
     computed: {
         dynamiccss() {
@@ -180,25 +181,12 @@ var app = new Vue({
     },
     methods: {
         async upload(e) {
-
-            // console.log('e.target: ', e.target);
+            // const pbar = document.querySelector('.progress-bar');
+            // this.progress = 10;
+            const sixe = e.target.files[0].size;
             const pocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
-
-           
-            let timer = 0;
-            while (timer < 100) {
-                const progressTimer = setTimeout(() => {
-                    timer++;
-                    console.log('timer: ', timer);
-                    return 
-                },50);
-                document.querySelector('.progress-bar').style.width = `${progressTimer}%`
-                
-            }
-
-            // document.querySelector('.progress-bar').style.width = '100%';
 
             fData.append('stend', this.stendVersion);
             fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
@@ -212,18 +200,35 @@ var app = new Vue({
                 method: 'POST',
                 body: fData
             });
+
             let result = await response.json();
             this.message = result.msg;
             console.log(this.message);
+
+            function sleep(milliseconds) {
+                var t = (new Date()).getTime();
+                var i = 0;
+                while (((new Date()).getTime() - t) < milliseconds) {
+                    i++;
+                }
+            }
+            let progressCount = 0;
+            
+            while (progressCount <= 100) {
+                sleep(20);
+                this.progress = progressCount;
+                progressCount++;
+            }
 
             this.$data.pockets[pocket].file = result.file;
             if (result.thumb) {
                 this.$data.pockets[pocket].thumb = result.thumb;
 
             }
-            document.querySelector('.progress-bar').style.width = '100%';
+
+            this.progress = 100;
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
-            document.querySelector('.progress-bar').style.width = '0%';
+            // this.progress = 0;
              
         },
         async chooseDept(e) {
