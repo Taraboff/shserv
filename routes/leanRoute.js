@@ -103,6 +103,8 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
                         'a5': {'width': 135, 'height': 100} };
         size = formats[req.body.format];
 
+        uploadMsg.thumb = convFileName;
+
         gm(inputFile)
             .resize(size.width, size.height, '!')
             .write(outputFile, function (err) {
@@ -113,17 +115,9 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
                     console.log(err);
                     return res.send(err);
                 }
-                
             });
             
-        uploadMsg.thumb = convFileName;
-
-        
-  
 });
-
-
-
 
 
 router.get('/getstends/:deptId', function (req, res) {

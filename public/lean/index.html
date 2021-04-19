@@ -12,6 +12,8 @@
     <script src="/libs/bootstrap.bundle.js"></script>
     <script src="/libs/vue.js"></script>
     <script src="/libs/vue-router.js"></script>
+    <script src="/libs/axios.min.js"></script>
+
 </head>
 
 <body>
@@ -65,18 +67,18 @@
                 </li>
             </ul>
         </nav>
-
+        <!-- <div class="progress" style="height: 3px">
+            <div
+                class="progress-bar bg-info progress-bar-striped active"
+                role="progressbar"
+                :style="{width: progress + '%'}"
+                aria-valuenow="0"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            ></div>
+        </div> -->
         <div class="container-fluid">
-            <div class="progress" style="height: 10px">
-                <div
-                  class="progress-bar bg-info progress-bar-striped"
-                  role="progressbar"
-                  :style="{width: progress + '%'}"
-                  aria-valuenow="0"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-            </div>
+            
             <div class="wrapper">
                 <section>
                     <div class="row pt-3 align-items-center">
@@ -87,7 +89,8 @@
                 <section>
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">Состав рабочих групп
-                            <lean-pocket :pocket="pockets.workgroup" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.workgroup"></lean-pocket>
+                            
+                            <lean-pocket :pocket="pockets.workgroup" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.workgroup" :progressbar="progress"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Итоги 5С-аудита
                             <lean-pocket :pocket="pockets.result5s" :dest='uploaddir' @up="upload" :cssvars="dynamiccss.result5s"></lean-pocket>

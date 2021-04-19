@@ -3,22 +3,31 @@ Vue.config.devtools = true;
 
 Vue.component('lean-pocket', {
     template: `<form>
+                    <div class="progress" style="height: 3px" v-if="progressbar > 0">
+                        <div
+                            class="progress-bar bg-info progress-bar-striped active"
+                            role="progressbar"
+                            :style="{width: progressbar + '%'}"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                        ></div>
+                    </div>
                     <a :href="pocket.file ? dest + pocket.file : ''" target="_blank">
                         <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
                                 <div class="add"></div>
-                                
                             </label>
                         </div>
                     </a>
                 </form>`,
     data() {
         return {
-            
+            progress: 0
         }
     },
-    props: ['pocket', 'up', 'dest', 'cssvars'],
+    props: ['pocket', 'up', 'dest', 'cssvars', 'progressbar'],
     methods: {
         addfile(e) {
             this.$emit('up', e);
@@ -32,8 +41,9 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.2',
-            date: '18.04.2021 г.'
+            version: '0.8.3',
+            date: '19.04.2021 г.',
+            
         }
     }
 });
@@ -181,9 +191,7 @@ var app = new Vue({
     },
     methods: {
         async upload(e) {
-            // const pbar = document.querySelector('.progress-bar');
-            // this.progress = 10;
-            const sixe = e.target.files[0].size;
+            const size = e.target.files[0].size;
             const pocket = e.target.name;
             const fData = new FormData();
             console.log('Загрузка файла...');
@@ -196,41 +204,50 @@ var app = new Vue({
             fData.append('isImage', this.$data.pockets[pocket].isImage);
             fData.append('format', this.$data.pockets[pocket].format);
 
-            let response = await fetch('/upload', {
-                method: 'POST',
-                body: fData
-            });
+            try {
+                let response = await axios.post('/upload',
+                    fData, 
+                    { 
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: function(progressEvent) {
+                            this.progress = parseInt(Math.round(( progressEvent.loaded / progressEvent.total) * 100));
+                        }.bind(this)
+                    });
 
-            let result = await response.json();
-            this.message = result.msg;
-            console.log(this.message);
+                let result = response.data;
+                app.message = result.msg;
+                console.log(app.message);
 
-            function sleep(milliseconds) {
-                var t = (new Date()).getTime();
-                var i = 0;
-                while (((new Date()).getTime() - t) < milliseconds) {
-                    i++;
+                app.pockets[pocket].file = result.file;
+                this.progress = 0;
+
+                if (result.thumb) {
+                    app.pockets[pocket].thumb = result.thumb;
                 }
-            }
-            let progressCount = 0;
-            
-            while (progressCount <= 100) {
-                sleep(20);
-                this.progress = progressCount;
-                progressCount++;
+            } catch {
+                if (error.response) {
+                  // The request was made and the server responded with a status code
+                  // that falls out of the range of 2xx
+                  console.log(error.response.data);
+                  console.log(error.response.status);
+                  console.log(error.response.headers);
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                  // http.ClientRequest in node.js
+                  console.log(error.request);
+                } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log('Error', error.message);
+                }
+                console.log(error.config);
             }
 
-            this.$data.pockets[pocket].file = result.file;
-            if (result.thumb) {
-                this.$data.pockets[pocket].thumb = result.thumb;
-
-            }
-
-            this.progress = 100;
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
-            // this.progress = 0;
-             
         },
+
         async chooseDept(e) {
             this.currentDept = this.deptsList[e.target.dataset.dept];
             this.stendVersion = '';
