@@ -3,16 +3,7 @@ Vue.config.devtools = true;
 
 Vue.component('lean-pocket', {
     template: `<form>
-                    <div class="progress" style="height: 3px" v-if="progressbar > 0">
-                        <div
-                            class="progress-bar bg-info progress-bar-striped active"
-                            role="progressbar"
-                            :style="{width: progressbar + '%'}"
-                            aria-valuenow="0"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                        ></div>
-                    </div>
+                    
                     <a :href="pocket.file ? dest + pocket.file : ''" target="_blank">
                         <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
@@ -24,10 +15,10 @@ Vue.component('lean-pocket', {
                 </form>`,
     data() {
         return {
-            progress: 0
+            
         }
     },
-    props: ['pocket', 'up', 'dest', 'cssvars', 'progressbar'],
+    props: ['pocket', 'up', 'dest', 'cssvars'],
     methods: {
         addfile(e) {
             this.$emit('up', e);
@@ -226,7 +217,7 @@ var app = new Vue({
                 if (result.thumb) {
                     app.pockets[pocket].thumb = result.thumb;
                 }
-            } catch {
+            } catch(error) {
                 if (error.response) {
                   // The request was made and the server responded with a status code
                   // that falls out of the range of 2xx
