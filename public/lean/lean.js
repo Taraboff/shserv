@@ -290,7 +290,7 @@ var app = new Vue({
 
         },
         makeNewStend() {
-            // axios
+            // axios.post('/new', )
             // this.currentDept.id,  version формируется вручную в поле ввода модального окна
             // открытие модального окна
                 this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
