@@ -176,8 +176,21 @@ section {
 }
 
 .footer {
-    margin-top: 80px;
+    margin-top: 65px;
     display: flex;
     justify-content: center;
     font-size: 0.9em;
+}
+.terminal {
+    position: relative;
+}
+.syslog {
+    
+    font-family: courier, "courier new", serif;
+    font-size: 0.8em;
+    position: absolute;
+    top: 5px;
+    border-bottom: 1px solid#dfdfdf;
+    padding: 2px 25px 1px 5px;
+    
 }

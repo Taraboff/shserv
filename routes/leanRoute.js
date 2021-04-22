@@ -77,7 +77,7 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
         return res.send(JSON.stringify(uploadMsg));
     }
     
-    uploadMsg.msg = `Файл ${req.file.originalname} загружен в каталог /uploads`;
+    uploadMsg.msg = `Файл "${req.file.originalname}" загружен на сервер`;
     uploadMsg.file = req.file.filename; 
         
     //  запись в БД имени файла
@@ -118,6 +118,7 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             });
             
 });
+
 
 
 router.get('/getstends/:deptId', function (req, res) {

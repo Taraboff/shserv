@@ -32,8 +32,8 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.3',
-            date: '19.04.2021 г.',
+            version: '0.8.4',
+            date: '22.04.2021 г.',
             
         }
     }
@@ -48,7 +48,7 @@ var app = new Vue({
         versionsList: [],
         currentStend: '',
         stendVersion: '',
-        message: '',
+        sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
         uploaddir: '/uploads/',
         pockets: { workgroup: {
                         name: 'workgroup',
@@ -185,7 +185,8 @@ var app = new Vue({
             const size = e.target.files[0].size;
             const pocket = e.target.name;
             const fData = new FormData();
-            console.log('Загрузка файла...');
+            this.sysmsg = 'Загрузка файла...';
+            // console.log('Загрузка файла...');
 
             fData.append('stend', this.stendVersion);
             fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
@@ -204,12 +205,16 @@ var app = new Vue({
                         },
                         onUploadProgress: function(progressEvent) {
                             this.progress = parseInt(Math.round(( progressEvent.loaded / progressEvent.total) * 100));
+                            // если файл закачан, перейти к след.этапу - конвертации файла
+                            if (progressEvent.loaded == progressEvent.total) {
+                                this.sysmsg = 'Обработка файла...';
+                            }
                         }.bind(this)
                     });
 
                 let result = response.data;
-                app.message = result.msg;
-                console.log(app.message);
+                app.sysmsg = result.msg;
+                console.log(app.sysmsg);
 
                 app.pockets[pocket].file = result.file;
                 this.progress = 0;
@@ -221,19 +226,19 @@ var app = new Vue({
                 if (error.response) {
                   // The request was made and the server responded with a status code
                   // that falls out of the range of 2xx
-                  console.log(error.response.data);
-                  console.log(error.response.status);
-                  console.log(error.response.headers);
+                  console.log('error.response.data' + error.response.data);
+                  console.log('error.response.status' + error.response.status);
+                  console.log('error.response.headers' + error.response.headers);
                 } else if (error.request) {
                   // The request was made but no response was received
                   // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                   // http.ClientRequest in node.js
-                  console.log(error.request);
+                  console.log('error.request' + error.request);
                 } else {
                   // Something happened in setting up the request that triggered an Error
                   console.log('Error', error.message);
                 }
-                console.log(error.config);
+                console.log('error.config' + error.config);
             }
 
             document.querySelector('form').reset(); // очищаем форму после загрузки файла
@@ -241,6 +246,7 @@ var app = new Vue({
 
         async chooseDept(e) {
             this.currentDept = this.deptsList[e.target.dataset.dept];
+            this.sysmsg = `Выбрано подразделение: ${this.currentDept.name}. Пожалуйста, выберите версию стенда или создайте новый`;
             this.stendVersion = '';
             this.isAuth = true;
             this.versionsList = [];
@@ -262,9 +268,10 @@ var app = new Vue({
             }
         },
         chooseStendVersion(idx) {
+            
             this.currentStend = idx;                        // порядковый номер стренда текущего подразделения
             this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
-
+            this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}. Вы можете загружать отсканированные документы. Доступны к загрузке форматы jpg, png и pdf`;
             // перебор объекта this.stends[idx] - текущего стенда
 
             // функция обновления содержимого стенда
@@ -281,6 +288,13 @@ var app = new Vue({
                 }
             } 
 
+        },
+        makeNewStend() {
+            // axios
+            // this.currentDept.id,  version формируется вручную в поле ввода модального окна
+            // открытие модального окна
+                this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
+            // const sql_new_stend = `INSERT stends(dept, version) VALUES (${req.body.deptId}, '${req.body.stend}');`;
         }
     },
     async created() {

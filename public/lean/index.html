@@ -57,7 +57,7 @@
                         <!-- <li>
                             <hr class="dropdown-divider">
                         </li> -->
-                        <li><a class="dropdown-item" href="#">Новый</a></li>
+                        <li><a class="dropdown-item" href="#" @click="makeNewStend">Новый</a></li>
                     </ul>
                 </li>
 
@@ -80,9 +80,15 @@
         <div class="container-fluid">
             
             <div class="wrapper">
+                <div class="terminal">
+                    <div class="syslog">> {{ sysmsg }}</div>
+                </div>
+                
                 <section>
                     <div class="row pt-3 align-items-center">
-                        <div class="col-10 head px-lg-5 text-center"><span v-if="currentDept.name" class="px-2">Подразделение:  </span>{{ currentDept.name }}</div>
+                        <div class="col-10 head px-lg-5 text-center">
+                            <span v-if="currentDept.name" class="px-2">Подразделение:  </span>{{ currentDept.name }}
+                        </div>
                         <div class="col-2 text-center"><img src="img/lean_logo.png" class="leanlogo"></div>
                     </div>
                 </section>
