@@ -21,16 +21,18 @@
     <div id="app">
         <div class="newstend_modal_wrapper" ref="modal_wrapper" v-if="isModalVisible">
             <div class="newstend_modal">
-                <div class="modal-header">
-                    <span>Введите название нового стенда</span>
-                </div>
-                <div class="modal-content">
-                    <input type="text" placeholder="052021">
-                </div>
-                <div class="modal-footer">
-                    <button class="button btn">OK</button>
-                    <button class="button btn" @click="swModal">Закрыть</button>
-                </div>
+                <form>
+                    <div class="modal-header">
+                        <span>Введите название нового стенда</span>
+                    </div>
+                    <div class="modal-content">
+                        <input v-model.trim="newStendName" name="new-stend-name" placeholder="052021">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="button btn" @click="makeNewStend">OK</button>
+                        <button class="button btn" @click="swModal">Закрыть</button>
+                    </div>
+                </form>
             </div>
         </div>
         <nav class="navbar px-4 align-items-center navbar-light bg-light">

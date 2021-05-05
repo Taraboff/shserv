@@ -119,7 +119,22 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             
 });
 
+router.post('/new', function(req, res) {
+    console.log('req: ', req);
 
+    const sql_new_stend = `INSERT stends(dept, version) VALUES (${req.body.deptId}, '${req.body.stend}');`;
+    console.log('sql_new_stend: ', sql_new_stend);
+
+    try {
+        connection.query(sql_new_stend, (err, results) => {
+            if (err) console.log(err);
+
+            res.send(JSON.stringify(results));
+        });
+        } catch (e) {
+            console.log(e);
+        }
+});
 
 router.get('/getstends/:deptId', function (req, res) {
     const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;

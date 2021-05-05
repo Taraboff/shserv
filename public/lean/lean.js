@@ -161,7 +161,8 @@ var app = new Vue({
     },
         isAuth: false,
         progress: 0,
-        isModalVisible: false
+        isModalVisible: false,
+        newStendName: ''
     },
     computed: {
         dynamiccss() {
@@ -301,12 +302,27 @@ var app = new Vue({
         swModal() {
             this.isModalVisible = !this.isModalVisible;
         },
-        makeNewStend() {
-            // axios.post('/new', )
-            // this.currentDept.id,  version формируется вручную в поле ввода модального окна
-            // открытие модального окна
+        async makeNewStend() {
+            const data = {
+                deptId: this.currentDept.id,
+                stend: this.newStendName
+            };
+            
+
+            let response = await fetch('/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                  },
+                body: JSON.stringify(data) 
+                
+                
+            });
+
+             let res = await response.json();
+
+            console.log(res.message);
                 this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-            // const sql_new_stend = `INSERT stends(dept, version) VALUES (${req.body.deptId}, '${req.body.stend}');`;
         }
     },
     async created() {
