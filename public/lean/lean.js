@@ -160,7 +160,8 @@ var app = new Vue({
                     }
     },
         isAuth: false,
-        progress: 0
+        progress: 0,
+        isModalVisible: false
     },
     computed: {
         dynamiccss() {
@@ -179,6 +180,14 @@ var app = new Vue({
 
         }
         }
+    },
+    mounted() {
+        let vm = this;
+        document.addEventListener('click', function(item) {
+            if (item.target === vm.$refs['modal_wrapper']) {
+                vm.swModal();
+            }
+        })
     },
     methods: {
         async upload(e) {
@@ -288,6 +297,9 @@ var app = new Vue({
                 }
             } 
 
+        },
+        swModal() {
+            this.isModalVisible = !this.isModalVisible;
         },
         makeNewStend() {
             // axios.post('/new', )

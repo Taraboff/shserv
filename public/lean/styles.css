@@ -194,3 +194,40 @@ section {
     padding: 2px 25px 1px 5px;
     
 }
+.newstend_modal {
+    width: 450px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    padding: 17px 33px 17px 33px;
+    box-shadow: 10px 10px 9px 0px rgba(186, 186, 186, 0.2);
+}
+.modal-header, .modal-footer {
+    display: flex;
+    justify-content: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    border: none;
+}
+.newstend_modal_wrapper {
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(64,64,64, .4);
+}
+.button {
+    min-width: 120px;
+    border: none;
+    border-radius: 5px;
+    background: #1186d3;
+    margin-top: 15px;
+    margin-right: 20px;
+    color: #ffffff;
+    font-weight: 400;
+}
