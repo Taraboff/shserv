@@ -188,7 +188,26 @@ var app = new Vue({
             if (item.target === vm.$refs['modal_wrapper']) {
                 vm.swModal();
             }
-        })
+        });
+        console.log('mounted ' + new Date());
+    },
+    updated() {
+        console.log('updated');
+    },
+    async created() {
+        // чтение из БД
+
+        let response = await fetch('/init');
+        if (response.ok) {
+            let result = await response.json();
+
+            if (result.length) {
+                this.deptsList = [...result];
+            }
+        } else {
+            console.log(`Ошибка init: ${response.status}`);
+        }
+        // console.log('created'+ new Date());
     },
     methods: {
         async upload(e) {
@@ -303,40 +322,28 @@ var app = new Vue({
             this.isModalVisible = !this.isModalVisible;
         },
         async makeNewStend() {
-            const data = {
-                deptId: this.currentDept.id,
-                stend: this.newStendName
-            };
-            
+            const frmData = new FormData();
 
-            let response = await fetch('/new', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                  },
-                body: JSON.stringify(data) 
-                
-                
-            });
+            frmData.append('dept', this.currentDept.id);
+            frmData.append('stend', this.newStendName);
 
-             let res = await response.json();
+            let response = await axios.post('/new', frmData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    
+                });
 
-            console.log(res.message);
+             let res = response.data;
+
+            // console.log(res);
                 this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-        }
-    },
-    async created() {
-        // чтение из БД
+                // return;
+                // currentDept.
+                // stendVersion
+                this.swModal();
 
-        let response = await fetch('/init');
-        if (response.ok) {
-            let result = await response.json();
-
-            if (result.length) {
-                this.deptsList = [...result];
-            }
-        } else {
-            console.log(`Ошибка init: ${response.status}`);
         }
     }
 

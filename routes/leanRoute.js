@@ -120,9 +120,9 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
 });
 
 router.post('/new', function(req, res) {
-    console.log('req: ', req);
+    console.log('req: ', req.body);
 
-    const sql_new_stend = `INSERT stends(dept, version) VALUES (${req.body.deptId}, '${req.body.stend}');`;
+    const sql_new_stend = `INSERT stends(dept, version) VALUES (3, '072021');`;
     console.log('sql_new_stend: ', sql_new_stend);
 
     try {
@@ -130,10 +130,11 @@ router.post('/new', function(req, res) {
             if (err) console.log(err);
 
             res.send(JSON.stringify(results));
+            // res.send(JSON.stringify({message: "ok"}));
         });
-        } catch (e) {
-            console.log(e);
-        }
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 router.get('/getstends/:deptId', function (req, res) {
