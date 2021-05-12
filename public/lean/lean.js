@@ -1,3 +1,4 @@
+
 Vue.config.debug = true; 
 Vue.config.devtools = true;
 
@@ -207,7 +208,7 @@ var app = new Vue({
         } else {
             console.log(`Ошибка init: ${response.status}`);
         }
-        // console.log('created'+ new Date());
+        console.log('created'+ new Date());
     },
     methods: {
         async upload(e) {
@@ -321,29 +322,51 @@ var app = new Vue({
         swModal() {
             this.isModalVisible = !this.isModalVisible;
         },
-        async makeNewStend() {
+        makeNewStend() {
             const frmData = new FormData();
 
             frmData.append('dept', this.currentDept.id);
             frmData.append('stend', this.newStendName);
-
-            let response = await axios.post('/new', frmData,
+            try {
+            axios.post('/new1', frmData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
                     
+                }).then(response => {
+                    let res = response.data;
+                    console.log('res: ', res);
+
+
+                    //  let res = response.data;
+        
+                    // console.log(res);
+                        this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
+                        // return;
+                        // currentDept.
+                        // stendVersion
+                        this.swModal();
                 });
 
-             let res = response.data;
-
-            // console.log(res);
-                this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-                // return;
-                // currentDept.
-                // stendVersion
-                this.swModal();
-
+            } catch(e) {
+                if (error.response) {
+                  // The request was made and the server responded with a status code
+                  // that falls out of the range of 2xx
+                  console.log('error.response.data' + error.response.data);
+                  console.log('error.response.status' + error.response.status);
+                  console.log('error.response.headers' + error.response.headers);
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                  // http.ClientRequest in node.js
+                  console.log('error.request' + error.request);
+                } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log('Error', error.message);
+                }
+                console.log('error.config' + error.config);
+            }
         }
     }
 
