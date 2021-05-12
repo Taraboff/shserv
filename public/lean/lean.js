@@ -323,30 +323,28 @@ var app = new Vue({
             this.isModalVisible = !this.isModalVisible;
         },
         makeNewStend() {
-            const frmData = new FormData();
+            const body = {
+                'dept': this.currentDept.id,
+                'stend': this.newStendName
+            }
 
-            frmData.append('dept', this.currentDept.id);
-            frmData.append('stend', this.newStendName);
             try {
-            axios.post('/new1', frmData,
+            axios.post('/new', 
                 {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'application/json'
                     },
+                    body: JSON.stringify(body)
                     
                 }).then(response => {
                     let res = response.data;
                     console.log('res: ', res);
 
-
-                    //  let res = response.data;
-        
-                    // console.log(res);
-                        this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-                        // return;
-                        // currentDept.
-                        // stendVersion
-                        this.swModal();
+                    this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
+                    // return;
+                    // currentDept.
+                    this.stendVersion =
+                    this.swModal();
                 });
 
             } catch(e) {

@@ -7,6 +7,7 @@ const path = require('path');
 const mysql = require('mysql2');
 let newName, errMsg, uploadMsg;
 
+
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
@@ -119,20 +120,22 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
             
 });
 
-router.post('/new1', function(req, res, next) {
+router.post('/new', function(req, res, next) {
     // console.log('req: ', req.body);
+    const body = JSON.parse(req.body);
+    console.log('body: ', body);
 
-    // const sql_new_stend = `INSERT stends(dept, version) VALUES (3, '1205');`;
-    // console.log('sql_new_stend: ', sql_new_stend);
+    const sql_new_stend = `INSERT stends(dept, version) VALUES (${body.dept}, '${body.stend}');`;
+    console.log('sql_new_stend: ', sql_new_stend);
 
     try {
-        // connection.query(sql_new_stend, (err, results) => {
-        //     if (err) console.log(err);
-        //     // console.log(results);
-        //     // res.send(JSON.stringify(results));
-        //     res.send(JSON.stringify({message: "ok"}));
-        // });
-        res.send(JSON.stringify({message: "ok"}));
+        connection.query(sql_new_stend, (err, results) => {
+            if (err) console.log(err);
+            // console.log(results);
+            res.send(JSON.stringify(results));
+            // res.send(JSON.stringify({message: "ok"}));
+        });
+        // res.send(JSON.stringify({message: "ok"}));
     } catch (e) {
         console.log(e);
     }
