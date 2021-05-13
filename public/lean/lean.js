@@ -33,8 +33,8 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.4',
-            date: '22.04.2021 г.',
+            version: '0.8.5',
+            date: '13.05.2021 г.',
             
         }
     }
@@ -46,8 +46,8 @@ var app = new Vue({
         deptsList: [],
         currentDept: {},
         stends: [],
-        versionsList: [],
-        currentStend: '',
+        // versionsList: [],
+        // currentStend: '',
         stendVersion: '',
         sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
         uploaddir: '/uploads/',
@@ -57,7 +57,6 @@ var app = new Vue({
                         format: 'a4',
                         bg: 'bg-a4',
                         empty: 'blue',
-                        isImage: true,
                         thumb: ''
                     },
                     result5s: {
@@ -66,7 +65,6 @@ var app = new Vue({
                         format: 'a4',
                         bg: 'bg-a4',
                         empty: 'blue',
-                        isImage: true,
                         thumb: ''
                     },
                     plan5s: {
@@ -75,7 +73,6 @@ var app = new Vue({
                         format: 'a4',
                         bg: 'bg-a4',
                         empty: 'green',
-                        isImage: true,
                         thumb: ''
                     },
                     best: {
@@ -84,7 +81,6 @@ var app = new Vue({
                         format: 'a4',
                         bg: 'bg-a4',
                         empty: 'green',
-                        isImage: true,
                         thumb: ''
                     },
                     before1: {
@@ -93,7 +89,6 @@ var app = new Vue({
                         format: 'a5',
                         bg: 'bg-foto',
                         empty: 'purple',
-                        isImage: true,
                         thumb: ''
                     },
                     after1: {
@@ -102,7 +97,6 @@ var app = new Vue({
                         format: 'a5',
                         bg: 'bg-foto',
                         empty: 'green',
-                        isImage: true,
                         thumb: ''
                     },
                     before2: {
@@ -111,7 +105,6 @@ var app = new Vue({
                         format: 'a5',
                         bg: 'bg-foto',
                         empty: 'purple',
-                        isImage: true,
                         thumb: ''
                     },
                     after2: {
@@ -120,7 +113,6 @@ var app = new Vue({
                         format: 'a5',
                         bg: 'bg-foto',
                         empty: 'green',
-                        isImage: true,
                         thumb: ''
                     },
                     params: {
@@ -129,7 +121,6 @@ var app = new Vue({
                         format: 'a4r',
                         bg: 'bg-a4r',
                         empty: 'orange',
-                        isImage: true,
                         thumb: ''
                     },
                     graphics5s: {
@@ -138,7 +129,6 @@ var app = new Vue({
                         format: 'a4r',
                         bg: 'bg-a4r',
                         empty: 'orange',
-                        isImage: true,
                         thumb: ''
                     },
                     projects: {
@@ -147,7 +137,6 @@ var app = new Vue({
                         format: 'a4r',
                         bg: 'bg-a4r',
                         empty: 'purple',
-                        isImage: true,
                         thumb: ''
                     },
                     techcards: {
@@ -156,7 +145,6 @@ var app = new Vue({
                         format: 'a4r',
                         bg: 'bg-a4r',
                         empty: 'purple',
-                        isImage: true,
                         thumb: ''
                     }
     },
@@ -190,10 +178,10 @@ var app = new Vue({
                 vm.swModal();
             }
         });
-        console.log('mounted ' + new Date());
+        // console.log('mounted ' + new Date());
     },
     updated() {
-        console.log('updated');
+        // console.log('updated');
     },
     async created() {
         // чтение из БД
@@ -208,7 +196,7 @@ var app = new Vue({
         } else {
             console.log(`Ошибка init: ${response.status}`);
         }
-        console.log('created'+ new Date());
+        // console.log('created '+ new Date());
     },
     methods: {
         async upload(e) {
@@ -216,7 +204,6 @@ var app = new Vue({
             const pocket = e.target.name;
             const fData = new FormData();
             this.sysmsg = 'Загрузка файла...';
-            // console.log('Загрузка файла...');
 
             fData.append('stend', this.stendVersion);
             fData.append('dept', this.currentDept.code);  // устоявшееся кодовое обозначение цеха, например 08, 09, 13
@@ -279,34 +266,27 @@ var app = new Vue({
             this.sysmsg = `Выбрано подразделение: ${this.currentDept.name}. Пожалуйста, выберите версию стенда или создайте новый`;
             this.stendVersion = '';
             this.isAuth = true;
-            this.versionsList = [];
+            // this.versionsList = [];
+
             //запрос к БД объекта стендов
             let response = await fetch(`/getstends/${this.currentDept.id}`);
             if (response.ok) {
                 let result = await response.json();
                 if (result.length) {
-                    for (let i = 0; i < result.length; i++) {
-                        this.versionsList.push(result[i].version);
+                    // for (let i = 0; i < result.length; i++) {
+                    //     this.versionsList.push(result[i].version);
 
-                    }
+                    // }
                     this.stends = [...result];
                 }
                 // обновить стенд
                 for (let pocket in this.pockets) {
                     this.pockets[pocket].file = '';
+                    this.pockets[pocket].thumb = '';
                 }
             }
         },
-        chooseStendVersion(idx) {
-            
-            this.currentStend = idx;                        // порядковый номер стренда текущего подразделения
-            this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
-            this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}. Вы можете загружать отсканированные документы. Доступны к загрузке форматы jpg, png и pdf`;
-            // перебор объекта this.stends[idx] - текущего стенда
-
-            // функция обновления содержимого стенда
-
-            const stend = this.stends[idx];
+        updateStend(stend) {
             for (let pocket in stend) {
                 if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
                     if (stend[pocket]) {
@@ -314,53 +294,72 @@ var app = new Vue({
                         this.$data.pockets[pocket].thumb = stend[pocket].split('.')[0] + '.thumb.png';
                     } else {
                         this.$data.pockets[pocket].file = '';
+                        this.$data.pockets[pocket].thumb = '';
                     }
                 }
             } 
-
+        },
+        chooseStendVersion(idx) {
+            
+            const stend = this.stends[idx];  // текущий стенд
+            this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
+            this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}. Вы можете загружать отсканированные документы. Доступны к загрузке форматы jpg, png и pdf`;
+            
+            // функция обновления содержимого стенда
+            this.updateStend(stend);
+            // for (let pocket in stend) {
+            //     if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
+            //         if (stend[pocket]) {
+            //             this.$data.pockets[pocket].file = stend[pocket];
+            //             this.$data.pockets[pocket].thumb = stend[pocket].split('.')[0] + '.thumb.png';
+            //         } else {
+            //             this.$data.pockets[pocket].file = '';
+            //             this.$data.pockets[pocket].thumb = '';
+            //         }
+            //     }
+            // } 
         },
         swModal() {
             this.isModalVisible = !this.isModalVisible;
         },
-        makeNewStend() {
-            const body = {
-                'dept': this.currentDept.id,
-                'stend': this.newStendName
-            }
-
+        async makeNewStend() {
             try {
-            axios.post('/new', 
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                    
+                axios.post('/new', { 
+                    headers: { 'Content-Type': 'application/json'},
+                    data: JSON.stringify({
+                        'dept': this.currentDept.id,
+                        'stend': this.newStendName
+                    })
                 }).then(response => {
-                    let res = response.data;
-                    console.log('res: ', res);
-
+                    if (response.data[0]) {
+                        console.log('response.data[0]: ', response.data[0]);
+                        this.stends.push(response.data[0]);
+                    } else {
+                        let response = fetch(`/getstends/${this.currentDept.id}`);   // #### сделать асинхронно
+                        if (response.ok) {
+                            let result = response.json();
+                            if (result.length) {
+                                this.stends = [...result];
+                            }
+                        }
+                    }
+                }).then(() => {
                     this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-                    // return;
-                    // currentDept.
-                    this.stendVersion =
+                    this.stendVersion = this.newStendName;
                     this.swModal();
+                    const stend = this.stends[this.stends.length - 1];      // выбор текущего стенда
+                    // обновление содержимого стенда
+                    this.updateStend(stend);
                 });
-
+                
             } catch(e) {
                 if (error.response) {
-                  // The request was made and the server responded with a status code
-                  // that falls out of the range of 2xx
                   console.log('error.response.data' + error.response.data);
                   console.log('error.response.status' + error.response.status);
                   console.log('error.response.headers' + error.response.headers);
                 } else if (error.request) {
-                  // The request was made but no response was received
-                  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                  // http.ClientRequest in node.js
                   console.log('error.request' + error.request);
                 } else {
-                  // Something happened in setting up the request that triggered an Error
                   console.log('Error', error.message);
                 }
                 console.log('error.config' + error.config);

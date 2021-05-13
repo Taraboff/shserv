@@ -26,7 +26,7 @@
                         <span>Введите название нового стенда</span>
                     </div>
                     <div class="modal-content">
-                        <input v-model="newStendName" name="new-stend-name">
+                        <input v-model="newStendName" name="new-stend-name" autocomplete="off">
                     </div>
                     <div class="modal-footer">
                         <button class="button btn" @click="makeNewStend">OK</button>
@@ -69,8 +69,8 @@
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li v-for="item, idx in versionsList">
-                            <a class="dropdown-item" href="#" @click="chooseStendVersion(idx)">v.{{ item }}</a>
+                        <li v-for="item, idx in stends" :key="item.id">
+                            <a class="dropdown-item" href="#" @click="chooseStendVersion(idx)">v.{{ item.version }}</a>
                         </li>
 
                         <!-- <li>
