@@ -33,8 +33,8 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.5',
-            date: '13.05.2021 г.',
+            version: '0.8.6',
+            date: '19.05.2021 г.',
             
         }
     }
@@ -323,8 +323,8 @@ var app = new Vue({
             this.isModalVisible = !this.isModalVisible;
         },
         async makeNewStend() {
-            try {
-                axios.post('/new', { 
+            // try {
+                await axios.post('/new', { 
                     headers: { 'Content-Type': 'application/json'},
                     data: JSON.stringify({
                         'dept': this.currentDept.id,
@@ -340,6 +340,7 @@ var app = new Vue({
                             let result = response.json();
                             if (result.length) {
                                 this.stends = [...result];
+                                console.log('Запрос данных через fetch');
                             }
                         }
                     }
@@ -347,23 +348,24 @@ var app = new Vue({
                     this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
                     this.stendVersion = this.newStendName;
                     this.swModal();
+                    this.newStendName = '';
                     const stend = this.stends[this.stends.length - 1];      // выбор текущего стенда
                     // обновление содержимого стенда
                     this.updateStend(stend);
                 });
                 
-            } catch(e) {
-                if (error.response) {
-                  console.log('error.response.data' + error.response.data);
-                  console.log('error.response.status' + error.response.status);
-                  console.log('error.response.headers' + error.response.headers);
-                } else if (error.request) {
-                  console.log('error.request' + error.request);
-                } else {
-                  console.log('Error', error.message);
-                }
-                console.log('error.config' + error.config);
-            }
+            // } catch(e) {
+            //     if (error.response) {
+            //       console.log('error.response.data' + error.response.data);
+            //       console.log('error.response.status' + error.response.status);
+            //       console.log('error.response.headers' + error.response.headers);
+            //     } else if (error.request) {
+            //       console.log('error.request' + error.request);
+            //     } else {
+            //       console.log('Error', error.message);
+            //     }
+            //     console.log('error.config' + error.config);
+            // }
         }
     }
 

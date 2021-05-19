@@ -122,22 +122,22 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
 
 router.post('/new', function(req, res) {
     const body = JSON.parse(req.body.data);
-    console.log('req.body.data: ', req.body.data);
+    // console.log('req.body.data: ', req.body.data);
 
     const sql_new_stend = `INSERT stends(dept, version) VALUES (${body.dept}, '${body.stend}');`;
-    console.log('sql_new_stend: ', sql_new_stend);
     
     try {
         connection.query(sql_new_stend, (err, results) => {
-            console.log('results sql: ', results);
             if (err) console.log(err);
         });
         const sql = `SELECT * FROM stends WHERE dept=${body.dept} AND version='${body.stend}';`;   // реализовать асинхронно
-        connection.query(sql, (err, results) => {
-            console.log('results: ', results);
-            if (err) console.log(err);
-            res.send(JSON.stringify(results));
-        });
+        setTimeout(() => {
+            connection.query(sql, (err, results) => {
+                if (err) console.log(err);
+                res.send(JSON.stringify(results));
+            });
+        }, 0);
+        
 
     } catch (e) {
         console.log(e);
