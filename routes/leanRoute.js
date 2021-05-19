@@ -127,16 +127,21 @@ router.post('/new', function(req, res) {
     const sql_new_stend = `INSERT stends(dept, version) VALUES (${body.dept}, '${body.stend}');`;
     
     try {
-        connection.query(sql_new_stend, (err, results) => {
-            if (err) console.log(err);
-        });
+        setTimeout(() => {
+            connection.query(sql_new_stend, (err, results) => {
+                console.log(1);
+                if (err) console.log(err);
+            });
+
+        }, 0);
         const sql = `SELECT * FROM stends WHERE dept=${body.dept} AND version='${body.stend}';`;   // реализовать асинхронно
         setTimeout(() => {
             connection.query(sql, (err, results) => {
+                console.log(2);
                 if (err) console.log(err);
                 res.send(JSON.stringify(results));
             });
-        }, 0);
+        }, 100);
         
 
     } catch (e) {
