@@ -46,7 +46,6 @@ var app = new Vue({
         deptsList: [],
         currentDept: {},
         stends: [],
-        // versionsList: [],
         // currentStend: '',
         stendVersion: '',
         sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
@@ -200,7 +199,9 @@ var app = new Vue({
     },
     methods: {
         async upload(e) {
-            const size = e.target.files[0].size;
+
+            // console.log('e.target.files[0]: ', e.target.files[0]);
+            // const size = e.target.files[0].size;
             const pocket = e.target.name;
             const fData = new FormData();
             this.sysmsg = 'Загрузка файла...';
@@ -266,18 +267,15 @@ var app = new Vue({
             this.sysmsg = `Выбрано подразделение: ${this.currentDept.name}. Пожалуйста, выберите версию стенда или создайте новый`;
             this.stendVersion = '';
             this.isAuth = true;
-            // this.versionsList = [];
 
             //запрос к БД объекта стендов
             let response = await fetch(`/getstends/${this.currentDept.id}`);
             if (response.ok) {
                 let result = await response.json();
                 if (result.length) {
-                    // for (let i = 0; i < result.length; i++) {
-                    //     this.versionsList.push(result[i].version);
-
-                    // }
                     this.stends = [...result];
+                } else {
+                    this.stends = [];
                 }
                 // обновить стенд
                 for (let pocket in this.pockets) {
@@ -286,7 +284,7 @@ var app = new Vue({
                 }
             }
         },
-        updateStend(stend) {
+        updateStend(stend) {        // функция обновления содержимого стенда
             for (let pocket in stend) {
                 if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
                     if (stend[pocket]) {
@@ -303,56 +301,42 @@ var app = new Vue({
             
             const stend = this.stends[idx];  // текущий стенд
             this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
-            this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}. Вы можете загружать отсканированные документы. Доступны к загрузке форматы jpg, png и pdf`;
+            this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}`;
             
-            // функция обновления содержимого стенда
             this.updateStend(stend);
-            // for (let pocket in stend) {
-            //     if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
-            //         if (stend[pocket]) {
-            //             this.$data.pockets[pocket].file = stend[pocket];
-            //             this.$data.pockets[pocket].thumb = stend[pocket].split('.')[0] + '.thumb.png';
-            //         } else {
-            //             this.$data.pockets[pocket].file = '';
-            //             this.$data.pockets[pocket].thumb = '';
-            //         }
-            //     }
-            // } 
         },
         swModal() {
             this.isModalVisible = !this.isModalVisible;
         },
         async makeNewStend() {
-            // try {
-                await axios.post('/new', { 
-                    headers: { 'Content-Type': 'application/json'},
-                    data: JSON.stringify({
-                        'dept': this.currentDept.id,
-                        'stend': this.newStendName
-                    })
-                }).then(response => {
-                    if (response.data[0]) {
-                        console.log('response.data[0]: ', response.data[0]);
-                        this.stends.push(response.data[0]);
-                    } else {
-                        let response = fetch(`/getstends/${this.currentDept.id}`);   // #### сделать асинхронно
+            if (!this.newStendName) {
+                this.sysmsg = "Ошибка! Название стенда не может быть пустой строкой!"
+                return;
+            }
+
+            await axios.post('/new', { 
+                headers: { 'Content-Type': 'application/json'},
+                data: JSON.stringify({
+                    'dept': this.currentDept.id,
+                    'stend': this.newStendName
+                })
+            }).then( async () => {
+                        let response = await fetch(`/getstends/${app.currentDept.id}`);   
                         if (response.ok) {
-                            let result = response.json();
+                            let result = await response.json();
                             if (result.length) {
-                                this.stends = [...result];
-                                console.log('Запрос данных через fetch');
+                                app.stends = [...result];
                             }
                         }
-                    }
-                }).then(() => {
-                    this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы jpg, png и pdf';
-                    this.stendVersion = this.newStendName;
-                    this.swModal();
-                    this.newStendName = '';
-                    const stend = this.stends[this.stends.length - 1];      // выбор текущего стенда
-                    // обновление содержимого стенда
-                    this.updateStend(stend);
-                });
+                        return;
+            }).then(() => {
+                this.sysmsg = 'Вы создали новый стенд. Можно загрузить отсканированные документы. Разрешены форматы .jpg, .png и .pdf';
+                this.stendVersion = this.newStendName;
+                this.swModal();
+                this.newStendName = '';
+                const stend = this.stends[this.stends.length - 1];      // выбор текущего стенда
+                this.updateStend(stend);    // обновление содержимого стенда
+            });  // .catch  добавить
                 
             // } catch(e) {
             //     if (error.response) {

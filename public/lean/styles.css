@@ -112,8 +112,11 @@ section {
 }
 .nav-link {
     color: #333;
+    cursor: default;
 }
-
+.stendver:hover {
+    cursor: default;
+}
 .title {
     font-size: 24px;
     font-family: "RussianRail G Pro Regular";
@@ -199,6 +202,7 @@ section {
     background-color: rgb(255, 255, 255);
     border-radius: 5px;
     border: 1px solid rgb(141, 141, 141);
+    margin: 40px;
     padding: 17px 33px 1px 33px;
     /* box-shadow: 10px 10px 9px 0px rgba(186, 186, 186, 0.2); */
     box-shadow: 0px 0px 8px 0px rgba(177, 108, 108, 0.3);
