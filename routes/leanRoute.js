@@ -134,6 +134,19 @@ router.post('/new', function(req, res) {
     }
 });
 
+router.get('/getactive/:deptId', function(req, res) {
+    const sql = `SELECT * FROM current WHERE dept=${req.params.deptId};`;
+    try {
+        connection.query(sql, (err, results) => {
+            if (err) console.log(err);
+            res.send(JSON.stringify(results));
+        });
+        } catch (e) {
+            console.log(e);
+        }
+
+});
+
 router.get('/getstends/:deptId', function (req, res) {
     const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;
 

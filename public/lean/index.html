@@ -69,20 +69,32 @@
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li v-for="item, idx in stends" :key="item.id">
-                            <a class="dropdown-item" href="#" @click="chooseStendVersion(idx)">v.{{ item.version }}</a>
+                        <li class="dropdown-item" v-for="item, idx in stends" :key="item.id">
+                            <div class="list-stendver">
+                                <input class="form-check-input" type="checkbox" value="" title="Сделать активным" 
+                                    v-model="item.isActive"
+                                    @change="makeStendActive(idx)">
+                                <a class="dropdown-item" 
+                                    href="#" 
+                                    :class="{stendver: (item.version === stendVersion)}" 
+                                    @click="chooseStendVersion(idx)">{{ item.version }}
+                                </a>
+                            </div>
+                            
                         </li>
 
-                        <!-- <li>
+                        <li>
                             <hr class="dropdown-divider">
-                        </li> -->
+                        </li>
                         <li><a class="dropdown-item" href="#" @click="swModal">Новый</a></li>
                     </ul>
                 </li>
 
 
                 <li class="navbar-item mx-2" v-if="isAuth">
-                    <a href="#" class="nav-link" v-if="stendVersion"><b class="stendver">v.{{ stendVersion }}</b></a>
+                    <a href="#" class="nav-link" v-if="stendVersion"><b class="stendver">{{ stendVersion }}</b></a>
+                    <!-- <input type="checkbox" id="checkbox" v-if="stendVersion" v-model="activeStend" @change="makeStendActive"> -->
+                    <!-- <label for="checkbox" v-if="stendVersion">активный</label> -->
                 </li>
             </ul>
         </nav>

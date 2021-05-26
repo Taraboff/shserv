@@ -46,8 +46,9 @@ var app = new Vue({
         deptsList: [],
         currentDept: {},
         stends: [],
-        // currentStend: '',
+        currentStend: '',
         stendVersion: '',
+        activeStendId: '',
         sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
         uploaddir: '/uploads/',
         pockets: { workgroup: {
@@ -151,6 +152,7 @@ var app = new Vue({
         progress: 0,
         isModalVisible: false,
         newStendName: ''
+        
     },
     computed: {
         dynamiccss() {
@@ -166,8 +168,7 @@ var app = new Vue({
                 graphics5s: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.graphics5s.thumb}") no-repeat center top` },
                 projects: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.projects.thumb}") no-repeat center top` },
                 techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.techcards.thumb}") no-repeat center top` }
-
-        }
+            }
         }
     },
     mounted() {
@@ -263,8 +264,18 @@ var app = new Vue({
         },
 
         async chooseDept(e) {
+            let activeStendId;
             this.currentDept = this.deptsList[e.target.dataset.dept];
-            this.sysmsg = `Выбрано подразделение: ${this.currentDept.name}. Пожалуйста, выберите версию стенда или создайте новый`;
+            let resp = await fetch(`/getactive/${this.currentDept.id}`);
+
+            if (resp.ok) {
+                let result = await resp.json();
+                if (result.length > 0) {
+                    activeStendId = result[0].activestend;
+                }
+            }
+
+            this.sysmsg = `Выбрано подразделение: ${this.currentDept.name}. Вы можете выбрать версию стенда или создать новый`;
             this.stendVersion = '';
             this.isAuth = true;
 
@@ -277,16 +288,29 @@ var app = new Vue({
                 } else {
                     this.stends = [];
                 }
-                // обновить стенд
-                for (let pocket in this.pockets) {
-                    this.pockets[pocket].file = '';
-                    this.pockets[pocket].thumb = '';
+                // если нет активного стенда, обновить стенд (установить пустые карманы)
+                if (!activeStendId) {
+                    for (let pocket in this.pockets) {
+                        this.pockets[pocket].file = '';
+                        this.pockets[pocket].thumb = '';
+                    }
+                } else {
+                    this.stends.forEach((item, idx) => {
+                        if (item.id === activeStendId) {
+                            this.activeStendId = activeStendId;
+                            this.stends[idx].isActive = true;
+                            this.chooseStendVersion(idx);
+                        } else {
+                            this.stends[idx].isActive = false;
+
+                        }
+                    });
                 }
             }
         },
         updateStend(stend) {        // функция обновления содержимого стенда
             for (let pocket in stend) {
-                if (pocket != 'id' && pocket != 'dept' && pocket != 'version') {
+                if (pocket != 'id' && pocket != 'dept' && pocket != 'version' && pocket != 'isActive') {
                     if (stend[pocket]) {
                         this.$data.pockets[pocket].file = stend[pocket];
                         this.$data.pockets[pocket].thumb = stend[pocket].split('.')[0] + '.thumb.png';
@@ -301,6 +325,7 @@ var app = new Vue({
             
             const stend = this.stends[idx];  // текущий стенд
             this.stendVersion = this.stends[idx].version;   // версия выбранного стенда
+            this.currentStend = idx;
             this.sysmsg = `Выбрана версия стенда: ${this.stendVersion}`;
             
             this.updateStend(stend);
@@ -350,6 +375,34 @@ var app = new Vue({
             //     }
             //     console.log('error.config' + error.config);
             // }
+        },
+        makeStendActive(idx) {
+            // проход по stends и установка всех флагов:
+            // текущий инверсия, а остальные false
+            console.log('Установка активного стенда ' + idx);
+            // let sql =  `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${this.stends[idx].id} 
+            // ON DUPLICATE KEY UPDATE activestend=${this.stends[idx].id};`
+            // console.log(sql);
+            
+            // Согласно документам vue js, вам не нужно вводить метод @change для входных данных. при изменении входного 
+            // сигнала его модель будет автоматически срабатывать и обновляться. пожалуйста, удалите @change="
+
+            this.stends.forEach((stend, i) => {
+                console.log('i: ', i);
+
+                if (idx === i) {
+                    // this.stends[i].isActive = this.ActivatedStend;
+                    console.log('Клик на этом: ',  this.stends[i].isActive);
+
+                } else {
+                    this.stends[i].isActive = false;
+                    console.log('А этот false: ', this.stends[i].isActive);
+
+                }
+            })
+        },
+        isActiveStend(idx) {
+                return (this.activeStendId === this.stends[idx].id);
         }
     }
 

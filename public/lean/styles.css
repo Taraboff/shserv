@@ -113,9 +113,24 @@ section {
 .nav-link {
     color: #333;
     cursor: default;
+    padding: 0 1rem;
+}
+.stendver {
+    font-weight: 600;
 }
 .stendver:hover {
     cursor: default;
+}
+.list-stendver {
+    display: flex;
+    align-items: center;
+}
+.form-check-input[type=checkbox] {
+    z-index: 100;
+    width: 1.1rem;
+}
+.dropdown-item {
+    padding: 0.07rem 0.8rem;
 }
 .title {
     font-size: 24px;
