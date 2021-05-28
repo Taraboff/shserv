@@ -1,7 +1,5 @@
-
 Vue.config.debug = true; 
 Vue.config.devtools = true;
-
 Vue.component('lean-pocket', {
     template: `<form>
                     
@@ -49,6 +47,7 @@ var app = new Vue({
         currentStend: '',
         stendVersion: '',
         activeStendId: '',
+        activeStends: [],
         sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
         uploaddir: '/uploads/',
         pockets: { workgroup: {
@@ -152,7 +151,6 @@ var app = new Vue({
         progress: 0,
         isModalVisible: false,
         newStendName: ''
-        
     },
     computed: {
         dynamiccss() {
@@ -169,6 +167,17 @@ var app = new Vue({
                 projects: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.projects.thumb}") no-repeat center top` },
                 techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.techcards.thumb}") no-repeat center top` }
             }
+        },
+        activeStendsEx() {
+            let arr = [];
+            this.activeStends.forEach((item, idx) => {
+                if (item) {
+                    arr.push(false);
+                } else {
+                    arr.push(true);
+                }
+            })
+            return arr;
         }
     },
     mounted() {
@@ -178,10 +187,37 @@ var app = new Vue({
                 vm.swModal();
             }
         });
+        
         // console.log('mounted ' + new Date());
     },
     updated() {
         // console.log('updated');
+        // for (let stnd in this.activeStends) {
+        //     this.$watch(stnd, function(val, oldVal) {
+        //         console.log(this.activeStends[stnd], val, oldVal);
+        //     });
+        // }
+    },
+    watch:{
+        'activeStends': function (newVal, oldVal){
+            //to work with changes in someOtherProp
+            // console.log('Changed' + oldVal);
+
+            this.activeStends.forEach((item, idx) => {
+                console.log(`${idx}: ${item}`);
+                this.activeStends[idx] = false;
+            });
+        }
+        // 'item.prop': function(newVal, oldVal){
+        //     //to work with changes in prop
+        // }
+    
+        // activeStends: 
+        // for (let index in this.arr_of_objects) {
+        //     this.$watch(['arr_of_objects', index, 'foo'].join('.'), (newVal, oldVal) => {
+        //         console.info("arr_of_objects", this.arr_of_objects[index], newVal, oldVal);
+        //     });
+        // }
     },
     async created() {
         // чтение из БД
@@ -299,10 +335,11 @@ var app = new Vue({
                         if (item.id === activeStendId) {
                             this.activeStendId = activeStendId;
                             this.stends[idx].isActive = true;
+                            this.activeStends[idx] = true;
                             this.chooseStendVersion(idx);
                         } else {
                             this.stends[idx].isActive = false;
-
+                            this.activeStends[idx] = false;
                         }
                     });
                 }
@@ -376,27 +413,30 @@ var app = new Vue({
             //     console.log('error.config' + error.config);
             // }
         },
-        makeStendActive(idx) {
+        makeStendActive() {
             // проход по stends и установка всех флагов:
             // текущий инверсия, а остальные false
-            console.log('Установка активного стенда ' + idx);
+            console.log('Установка активного стенда ' );
             // let sql =  `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${this.stends[idx].id} 
             // ON DUPLICATE KEY UPDATE activestend=${this.stends[idx].id};`
             // console.log(sql);
             
             // Согласно документам vue js, вам не нужно вводить метод @change для входных данных. при изменении входного 
             // сигнала его модель будет автоматически срабатывать и обновляться. пожалуйста, удалите @change="
-
+            // console.log(e);
             this.stends.forEach((stend, i) => {
                 console.log('i: ', i);
 
                 if (idx === i) {
                     // this.stends[i].isActive = this.ActivatedStend;
-                    console.log('Клик на этом: ',  this.stends[i].isActive);
+                    this.activeStends[idx] = !this.activeStends[idx];
+                    this.stends[idx].isActive = !this.activeStends[idx];
+                    console.log('Клик на этом: ',  this.activeStends[idx]);
 
                 } else {
-                    this.stends[i].isActive = false;
-                    console.log('А этот false: ', this.stends[i].isActive);
+                    this.activeStends[idx] = false;
+                    this.stends[idx].isActive = false;
+                    console.log('А этот false: ', this.activeStends[idx]);
 
                 }
             })

@@ -7,13 +7,13 @@
     <title>Бережливое производство</title>
     <link rel="stylesheet" href="/libs/bootstrap.css">
     <link rel="stylesheet" href="styles.css">
+    
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <script src="/libs/bootstrap.bundle.js"></script>
     <script src="/libs/vue.js"></script>
     <script src="/libs/vue-router.js"></script>
     <script src="/libs/axios.min.js"></script>
-
 </head>
 
 <body>
@@ -71,9 +71,10 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li class="dropdown-item" v-for="item, idx in stends" :key="item.id">
                             <div class="list-stendver">
-                                <input class="form-check-input" type="checkbox" value="" title="Сделать активным" 
-                                    v-model="item.isActive"
-                                    @change="makeStendActive(idx)">
+                                <input  type="checkbox" title="Сделать активным"
+                                    :checked="activeStendsEx[idx]"
+
+                                    >
                                 <a class="dropdown-item" 
                                     href="#" 
                                     :class="{stendver: (item.version === stendVersion)}" 
