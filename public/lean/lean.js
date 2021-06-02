@@ -7,7 +7,7 @@ Vue.component('lean-pocket', {
                         <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
-                                <div class="add"></div>
+                                <div class="add" v-show="ready"></div>
                             </label>
                         </div>
                     </a>
@@ -17,7 +17,7 @@ Vue.component('lean-pocket', {
             
         }
     },
-    props: ['pocket', 'up', 'dest', 'cssvars'],
+    props: ['pocket', 'up', 'dest', 'cssvars', 'ready'],
     methods: {
         addfile(e) {
             this.$emit('up', e);
@@ -31,8 +31,8 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.6',
-            date: '19.05.2021 г.',
+            version: '0.8.10',
+            date: '02.06.2021 г.',
             
         }
     }
@@ -49,6 +49,7 @@ var app = new Vue({
         activeStendId: '',
         activeStends: [],
         sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
+        
         uploaddir: '/uploads/',
         pockets: { workgroup: {
                         name: 'workgroup',
@@ -150,7 +151,8 @@ var app = new Vue({
         isAuth: false,
         progress: 0,
         isModalVisible: false,
-        newStendName: ''
+        newStendName: '',
+        modalmsg: ''
     },
     computed: {
         dynamiccss() {
@@ -168,6 +170,9 @@ var app = new Vue({
                 techcards: { '--background-thumb' : `url("../uploads/thumbs/${this.pockets.techcards.thumb}") no-repeat center top` }
             }
         },
+        readyToUpload() {
+          return !!(Object.keys(this.currentDept).length && this.stends.length || this.stendVersion === 'promo'); // доработать
+        },
         activeStendsEx() {
             let arr = [];
             this.activeStends.forEach((item, idx) => {
@@ -177,7 +182,7 @@ var app = new Vue({
                     arr.push(true);
                 }
             })
-            return arr;
+            return false;
         }
     },
     mounted() {
@@ -236,9 +241,10 @@ var app = new Vue({
     },
     methods: {
         async upload(e) {
-
-            // console.log('e.target.files[0]: ', e.target.files[0]);
-            // const size = e.target.files[0].size;
+            if (this.stends.length === 0) {
+                this.sysmsg = "Для загрузки документов выберите стенд";
+                return
+            }
             const pocket = e.target.name;
             const fData = new FormData();
             this.sysmsg = 'Загрузка файла...';
@@ -368,13 +374,17 @@ var app = new Vue({
             this.updateStend(stend);
         },
         swModal() {
+            const self = this;
+            this.modalmsg = '';
+            
             this.isModalVisible = !this.isModalVisible;
+            if (this.isModalVisible) {
+                setTimeout(function (){
+                    self.$refs['newinput'].focus();
+                }, 500);
+            }
         },
         async makeNewStend() {
-            if (!this.newStendName) {
-                this.sysmsg = "Ошибка! Название стенда не может быть пустой строкой!"
-                return;
-            }
 
             await axios.post('/new', { 
                 headers: { 'Content-Type': 'application/json'},
@@ -398,20 +408,30 @@ var app = new Vue({
                 this.newStendName = '';
                 const stend = this.stends[this.stends.length - 1];      // выбор текущего стенда
                 this.updateStend(stend);    // обновление содержимого стенда
-            });  // .catch  добавить
-                
-            // } catch(e) {
-            //     if (error.response) {
-            //       console.log('error.response.data' + error.response.data);
-            //       console.log('error.response.status' + error.response.status);
-            //       console.log('error.response.headers' + error.response.headers);
-            //     } else if (error.request) {
-            //       console.log('error.request' + error.request);
-            //     } else {
-            //       console.log('Error', error.message);
-            //     }
-            //     console.log('error.config' + error.config);
-            // }
+            });
+        },
+        validateNewStendName() {
+            let ifStendExist = false;
+            if (!this.newStendName) {
+                this.modalmsg = "Название стенда не может быть пустым!";
+                return;
+            } else {
+               ifStendExist = this.stends.some((item) => {
+                    if (item.version === this.newStendName) {
+                        this.modalmsg = "Вы ввели существующее имя стенда";
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+
+            if (!ifStendExist) {
+                this.makeNewStend();
+            } else {
+                this.newStendName = '';
+            }
+            return;
         },
         makeStendActive() {
             // проход по stends и установка всех флагов:

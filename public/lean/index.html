@@ -19,20 +19,30 @@
 <body>
 
     <div id="app">
-        <div class="newstend_modal_wrapper" ref="modal_wrapper" v-if="isModalVisible">
-            <div class="newstend_modal">
-                
-                    <div class="modal-header">
-                        <span>Введите название нового стенда</span>
-                    </div>
-                    <div class="modal-content">
-                        <input v-model="newStendName" name="new-stend-name" autocomplete="off">
-                    </div>
-                    <div class="modal-footer">
-                        <button class="button btn" @click="makeNewStend">OK</button>
-                        <button class="button btn" @click="swModal">Закрыть</button>
-                    </div>
-                
+        <div class="newstend_modal_wrapper" ref="modal_wrapper" v-show="isModalVisible">
+            <div class="modal_notclickable_wrapper">
+                <div class="newstend_modal">
+                    
+                        <div class="modal-header">
+                            <span>Введите название нового стенда</span>
+                        </div>
+                        <div class="modal-content">
+                            <input id="newinput"
+                                v-model="newStendName" 
+                                name="new-stend-name" 
+                                autocomplete="off" 
+                                @input="modalmsg=''" 
+                                @keyup.enter="validateNewStendName"
+                                ref="newinput"
+                                >
+                        </div>
+                        <div class="modalmsg">{{ modalmsg }}</div>
+                        <div class="modal-footer">
+                            <button class="button btn" @click="validateNewStendName">OK</button>
+                            <button class="button btn" @click="swModal">Закрыть</button>
+                        </div>
+                    
+                </div>
             </div>
         </div>
         <nav class="navbar px-4 align-items-center navbar-light bg-light">
@@ -124,20 +134,20 @@
                     <div class="row align-items-end text-center">
                         <div class="col-2 px-lg-5">
                             <p>Состав рабочих групп</p>
-                            <lean-pocket :pocket="pockets.workgroup" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.workgroup" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.workgroup"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">
                             <p>Итоги 5С-аудита</p>
-                            <lean-pocket :pocket="pockets.result5s" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.result5s" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.result5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">План применения 5С
-                            <lean-pocket :pocket="pockets.plan5s" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.plan5s" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.plan5s"></lean-pocket>
                         </div>
                         <div class="col-2 px-lg-5">Лучшее рабочее место
-                            <lean-pocket :pocket="pockets.best" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.best" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.best"></lean-pocket>
                         </div>
 
@@ -151,24 +161,24 @@
 
                                 <!-- Before1 -->
                                 <div class="col-5">
-                                    <lean-pocket :pocket="pockets.before1" :dest='uploaddir' @up="upload"
+                                    <lean-pocket :pocket="pockets.before1" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                         :cssvars="dynamiccss.before1"></lean-pocket>
                                 </div>
 
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <lean-pocket :pocket="pockets.after1" :dest='uploaddir' @up="upload"
+                                    <lean-pocket :pocket="pockets.after1" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                         :cssvars="dynamiccss.after1"></lean-pocket>
                                 </div>
                             </div>
                             <div class="row mx-5 align-items-center">
                                 <div class="col-5">
-                                    <lean-pocket :pocket="pockets.before2" :dest='uploaddir' @up="upload"
+                                    <lean-pocket :pocket="pockets.before2" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                         :cssvars="dynamiccss.before2"></lean-pocket>
                                 </div>
                                 <div class="col-2">⪢⪢⪢</div>
                                 <div class="col-5">
-                                    <lean-pocket :pocket="pockets.after2" :dest='uploaddir' @up="upload"
+                                    <lean-pocket :pocket="pockets.after2" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                         :cssvars="dynamiccss.after2"></lean-pocket>
                                 </div>
                             </div>
@@ -179,19 +189,19 @@
                 <section>
                     <div class="row align-items-end text-center mt-5">
                         <div class="col-3 px-lg-5">Производственные показатели
-                            <lean-pocket :pocket="pockets.params" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.params" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.params"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">График 5С-аудита
-                            <lean-pocket :pocket="pockets.graphics5s" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.graphics5s" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.graphics5s"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Перечень проектов и потерь
-                            <lean-pocket :pocket="pockets.projects" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.projects" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.projects"></lean-pocket>
                         </div>
                         <div class="col-3 px-lg-5">Технологические карты
-                            <lean-pocket :pocket="pockets.techcards" :dest='uploaddir' @up="upload"
+                            <lean-pocket :pocket="pockets.techcards" :dest='uploaddir' @up="upload" :ready="readyToUpload"
                                 :cssvars="dynamiccss.techcards"></lean-pocket>
                         </div>
                     </div>

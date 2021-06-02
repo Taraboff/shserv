@@ -11,7 +11,7 @@ let newName, errMsg, uploadMsg;
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'admin3',
     database: 'lean'
 });
 

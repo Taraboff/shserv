@@ -216,9 +216,9 @@ section {
     width: 450px;
     background-color: rgb(255, 255, 255);
     border-radius: 5px;
-    border: 1px solid rgb(141, 141, 141);
+    border: 1px solid rgb(126, 126, 126);
     margin: 40px;
-    padding: 17px 33px 1px 33px;
+    padding: 17px 63px 1px 63px;
     /* box-shadow: 10px 10px 9px 0px rgba(186, 186, 186, 0.2); */
     box-shadow: 0px 0px 8px 0px rgba(177, 108, 108, 0.3);
 }
@@ -228,6 +228,9 @@ section {
     font-size: 1.1em;
     margin-bottom: 10px;
     border: none;
+}
+.modal_notclickable_wrapper {
+    padding: 10px;
 }
 .newstend_modal_wrapper {
     z-index: 10;
@@ -250,4 +253,9 @@ section {
     /* margin-right: 20px; */
     color: #ffffff;
     font-weight: 400;
+}
+.modalmsg {
+    color: red;
+    text-align: center;
+    height: 1.2rem;
 }
