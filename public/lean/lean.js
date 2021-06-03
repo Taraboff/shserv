@@ -171,7 +171,8 @@ var app = new Vue({
             }
         },
         readyToUpload() {
-          return !!(Object.keys(this.currentDept).length && this.stends.length || this.stendVersion === 'promo'); // доработать
+            let ready = !!(Object.keys(this.currentDept).length && this.stends.length && (this.stendVersion && this.stendVersion !== 'promo'));
+            return ready; 
         },
         activeStendsEx() {
             let arr = [];
@@ -182,7 +183,7 @@ var app = new Vue({
                     arr.push(true);
                 }
             })
-            return false;
+            return arr;
         }
     },
     mounted() {
@@ -204,7 +205,7 @@ var app = new Vue({
         // }
     },
     watch:{
-        'activeStends': function (newVal, oldVal){
+        'activeStendsEx': function (newVal, oldVal){
             //to work with changes in someOtherProp
             // console.log('Changed' + oldVal);
 
@@ -332,6 +333,7 @@ var app = new Vue({
                 }
                 // если нет активного стенда, обновить стенд (установить пустые карманы)
                 if (!activeStendId) {
+                    this.currentStend = '';
                     for (let pocket in this.pockets) {
                         this.pockets[pocket].file = '';
                         this.pockets[pocket].thumb = '';
@@ -462,7 +464,20 @@ var app = new Vue({
             })
         },
         isActiveStend(idx) {
-                return (this.activeStendId === this.stends[idx].id);
+                const act = !!(this.activeStendId === this.stends[idx].id);
+                return act;
+        },
+        updateActive(checked) {
+            let vm = this;
+                this.stends.forEach((item, i) => {
+                    if (i === checked[1]) {
+                        vm.stends[i].isActive = checked[0];
+                    } else {
+                        vm.stends[i].isActive = false;
+                    }
+                });
+                this.$forceUpdate();
+            return;
         }
     }
 

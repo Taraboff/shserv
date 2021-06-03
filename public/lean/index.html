@@ -82,8 +82,8 @@
                         <li class="dropdown-item" v-for="item, idx in stends" :key="item.id">
                             <div class="list-stendver">
                                 <input  type="checkbox" title="Сделать активным"
-                                    :checked="activeStendsEx[idx]"
-
+                                    @change="updateActive([$event.target.checked, idx])"
+                                    :checked="isActiveStend(idx)"
                                     >
                                 <a class="dropdown-item" 
                                     href="#" 
