@@ -173,17 +173,6 @@ var app = new Vue({
         readyToUpload() {
             let ready = !!(Object.keys(this.currentDept).length && this.stends.length && (this.stendVersion && this.stendVersion !== 'promo'));
             return ready; 
-        },
-        activeStendsEx() {
-            let arr = [];
-            this.activeStends.forEach((item, idx) => {
-                if (item) {
-                    arr.push(false);
-                } else {
-                    arr.push(true);
-                }
-            })
-            return arr;
         }
     },
     mounted() {
@@ -193,38 +182,8 @@ var app = new Vue({
                 vm.swModal();
             }
         });
-        
-        // console.log('mounted ' + new Date());
     },
-    updated() {
-        // console.log('updated');
-        // for (let stnd in this.activeStends) {
-        //     this.$watch(stnd, function(val, oldVal) {
-        //         console.log(this.activeStends[stnd], val, oldVal);
-        //     });
-        // }
-    },
-    watch:{
-        'activeStendsEx': function (newVal, oldVal){
-            //to work with changes in someOtherProp
-            // console.log('Changed' + oldVal);
-
-            this.activeStends.forEach((item, idx) => {
-                console.log(`${idx}: ${item}`);
-                this.activeStends[idx] = false;
-            });
-        }
-        // 'item.prop': function(newVal, oldVal){
-        //     //to work with changes in prop
-        // }
-    
-        // activeStends: 
-        // for (let index in this.arr_of_objects) {
-        //     this.$watch(['arr_of_objects', index, 'foo'].join('.'), (newVal, oldVal) => {
-        //         console.info("arr_of_objects", this.arr_of_objects[index], newVal, oldVal);
-        //     });
-        // }
-    },
+  
     async created() {
         // чтение из БД
 
@@ -307,14 +266,15 @@ var app = new Vue({
         },
 
         async chooseDept(e) {
-            let activeStendId;
+            this.activeStendId = '';
+            this.activeStends = [];
             this.currentDept = this.deptsList[e.target.dataset.dept];
             let resp = await fetch(`/getactive/${this.currentDept.id}`);
 
             if (resp.ok) {
                 let result = await resp.json();
                 if (result.length > 0) {
-                    activeStendId = result[0].activestend;
+                    this.activeStendId = result[0].activestend;
                 }
             }
 
@@ -332,7 +292,7 @@ var app = new Vue({
                     this.stends = [];
                 }
                 // если нет активного стенда, обновить стенд (установить пустые карманы)
-                if (!activeStendId) {
+                if (!this.activeStendId) {
                     this.currentStend = '';
                     for (let pocket in this.pockets) {
                         this.pockets[pocket].file = '';
@@ -340,15 +300,10 @@ var app = new Vue({
                     }
                 } else {
                     this.stends.forEach((item, idx) => {
-                        if (item.id === activeStendId) {
-                            this.activeStendId = activeStendId;
-                            this.stends[idx].isActive = true;
-                            this.activeStends[idx] = true;
+                        if (item.id === this.activeStendId) {
+                            this.activeStends.push(item.version);
                             this.chooseStendVersion(idx);
-                        } else {
-                            this.stends[idx].isActive = false;
-                            this.activeStends[idx] = false;
-                        }
+                        } 
                     });
                 }
             }
@@ -435,48 +390,20 @@ var app = new Vue({
             }
             return;
         },
-        makeStendActive() {
-            // проход по stends и установка всех флагов:
-            // текущий инверсия, а остальные false
-            console.log('Установка активного стенда ' );
-            // let sql =  `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${this.stends[idx].id} 
-            // ON DUPLICATE KEY UPDATE activestend=${this.stends[idx].id};`
-            // console.log(sql);
-            
-            // Согласно документам vue js, вам не нужно вводить метод @change для входных данных. при изменении входного 
-            // сигнала его модель будет автоматически срабатывать и обновляться. пожалуйста, удалите @change="
-            // console.log(e);
-            this.stends.forEach((stend, i) => {
-                console.log('i: ', i);
-
-                if (idx === i) {
-                    // this.stends[i].isActive = this.ActivatedStend;
-                    this.activeStends[idx] = !this.activeStends[idx];
-                    this.stends[idx].isActive = !this.activeStends[idx];
-                    console.log('Клик на этом: ',  this.activeStends[idx]);
-
-                } else {
-                    this.activeStends[idx] = false;
-                    this.stends[idx].isActive = false;
-                    console.log('А этот false: ', this.activeStends[idx]);
-
-                }
-            })
-        },
-        isActiveStend(idx) {
-                const act = !!(this.activeStendId === this.stends[idx].id);
-                return act;
-        },
-        updateActive(checked) {
-            let vm = this;
-                this.stends.forEach((item, i) => {
-                    if (i === checked[1]) {
-                        vm.stends[i].isActive = checked[0];
-                    } else {
-                        vm.stends[i].isActive = false;
-                    }
-                });
-                this.$forceUpdate();
+       
+        makeStendActive(e) {
+            let sql;
+            const value = e.target.value;
+            if (!e.target.checked) {
+                this.activeStends = []; 
+                // sql = удаляем из БД активный
+            } else {
+                this.activeStends = [];
+                this.activeStends.push(value);
+                // 
+                // sql =  `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${this.activeStendId} 
+                // ON DUPLICATE KEY UPDATE activestend=${this.activeStendId};`
+            }
             return;
         }
     }

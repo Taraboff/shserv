@@ -81,9 +81,10 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li class="dropdown-item" v-for="item, idx in stends" :key="item.id">
                             <div class="list-stendver">
-                                <input  type="checkbox" title="Сделать активным"
-                                    @change="updateActive([$event.target.checked, idx])"
-                                    :checked="isActiveStend(idx)"
+                                <input  type="checkbox" title="Сделать активным" ref="`idx${idx}`"
+                                    v-model="activeStends"
+                                    :value="item.version"
+                                    @change="makeStendActive"
                                     >
                                 <a class="dropdown-item" 
                                     href="#" 
