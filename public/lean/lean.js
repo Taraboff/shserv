@@ -394,16 +394,28 @@ var app = new Vue({
         makeStendActive(e) {
             let sql;
             const value = e.target.value;
-            if (!e.target.checked) {
+            if (!e.target.checked) {    // если флажок активного стенда снимается
                 this.activeStends = []; 
+                const dept = this.currentDept.id, version = value;
+                let body = `dept=${this.currentDept.id}&version=${value}&checked=false`;
+                console.log('body: ', body);
+                this.activeStendId = '';
                 // sql = удаляем из БД активный
+                // `DELETE FROM current WHERE dept=${this.currentDept.id} AND activestend = ${this.activeStendId};`
             } else {
                 this.activeStends = [];
                 this.activeStends.push(value);
-                // 
-                // sql =  `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${this.activeStendId} 
-                // ON DUPLICATE KEY UPDATE activestend=${this.activeStendId};`
+                // установка this.activeStendId =
+                // version = value;
+                // SQL-запрос из двух таблиц
+                // (1) получть const stendId = (SELECT id FROM stends WHERE version=${versionTo} AND dept=${this.currentDept.id});
+                // (2) вставить в current 
+                // sql = `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${stendId} ON DUPLICATE KEY UPDATE activestend=${stendId};`
             }
+            // fetch ('/setactive',
+            //     method: 'post',
+            //     body: body
+            // );
             return;
         }
     }

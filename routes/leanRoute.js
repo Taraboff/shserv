@@ -147,6 +147,24 @@ router.get('/getactive/:deptId', function(req, res) {
 
 });
 
+router.post('/setactive', function(req, res) {
+    // sql = удаляем из БД активный
+    // const sql = `DELETE FROM current WHERE dept=${this.currentDept.id} AND activestend = ${this.activeStendId};`
+    //
+    // const stendId = (SELECT id FROM stends WHERE version=${versionTo} AND dept=${this.currentDept.id});
+    // sql = `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${stendId} 
+    // ON DUPLICATE KEY UPDATE activestend=${stendId};`
+    try {
+        connection.query(sql, (err, results) => {
+            if (err) console.log(err);
+            res.send(JSON.stringify(results));
+        });
+        } catch (e) {
+            console.log(e);
+        }
+
+});
+
 router.get('/getstends/:deptId', function (req, res) {
     const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;
 
