@@ -3,7 +3,7 @@ Vue.config.devtools = true;
 Vue.component('lean-pocket', {
     template: `<form>
                     
-                    <a :href="pocket.file ? dest + pocket.file : ''" target="_blank">
+                    <a :href="pocket.file ? dest + pocket.file : '#'" :target="pocket.file ? '_blank' : ''">
                         <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
@@ -31,8 +31,8 @@ Vue.component('lean-footer', {
                 </div>`,
     data() {
         return {
-            version: '0.8.10',
-            date: '02.06.2021 г.',
+            version: '0.9.0',
+            date: '07.06.2021 г.',
             
         }
     }
@@ -48,7 +48,7 @@ var app = new Vue({
         stendVersion: '',
         activeStendId: '',
         activeStends: [],
-        sysmsg: 'Система готова к работе. Пожалуйста, авторизуйтесь',
+        sysmsg: 'Система готова к работе. Выберите подразделение',
         
         uploaddir: '/uploads/',
         pockets: { workgroup: {
@@ -214,7 +214,6 @@ var app = new Vue({
             fData.append('deptId', this.currentDept.id);
             fData.append('pocket', pocket);
             fData.append('uploadfile', e.target.files[0]);
-            fData.append('isImage', this.$data.pockets[pocket].isImage);
             fData.append('format', this.$data.pockets[pocket].format);
 
             try {
@@ -301,7 +300,7 @@ var app = new Vue({
                 } else {
                     this.stends.forEach((item, idx) => {
                         if (item.id === this.activeStendId) {
-                            this.activeStends.push(item.version);
+                            this.activeStends.push(item.id);
                             this.chooseStendVersion(idx);
                         } 
                     });
@@ -391,32 +390,33 @@ var app = new Vue({
             return;
         },
        
-        makeStendActive(e) {
-            let sql;
+        async makeStendActive(e) {
+            let body = {};
             const value = e.target.value;
             if (!e.target.checked) {    // если флажок активного стенда снимается
                 this.activeStends = []; 
-                const dept = this.currentDept.id, version = value;
-                let body = `dept=${this.currentDept.id}&version=${value}&checked=false`;
-                console.log('body: ', body);
+                body = { dept: this.currentDept.id, stendId: value, checked: false };
                 this.activeStendId = '';
-                // sql = удаляем из БД активный
-                // `DELETE FROM current WHERE dept=${this.currentDept.id} AND activestend = ${this.activeStendId};`
+                this.sysmsg = "У текущего подразделения теперь нет активного стенда";
             } else {
                 this.activeStends = [];
                 this.activeStends.push(value);
-                // установка this.activeStendId =
-                // version = value;
-                // SQL-запрос из двух таблиц
-                // (1) получть const stendId = (SELECT id FROM stends WHERE version=${versionTo} AND dept=${this.currentDept.id});
-                // (2) вставить в current 
-                // sql = `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${stendId} ON DUPLICATE KEY UPDATE activestend=${stendId};`
+                body = { dept: this.currentDept.id, stendId: value, checked: true };
+                this.activeStendId = value;
+                this.sysmsg = `Установлен активный стенд`;
             }
-            // fetch ('/setactive',
-            //     method: 'post',
-            //     body: body
-            // );
-            return;
+            try {
+                let response = await fetch('/setactive', {
+                    headers: { 'Content-Type': 'application/json'},
+                    method: 'post',
+                    body: JSON.stringify(body)
+                });
+                let result = await response.json();
+                return;
+
+            } catch(e) {
+                console.log('Ошибка запроса /setactive: ', e);
+            }
         }
     }
 

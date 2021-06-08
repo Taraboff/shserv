@@ -58,7 +58,6 @@ const fileFilter = (req, file, cb) => {
         cb(null, true);
     }
     else {
-        // errMsg = 'Неверный тип документа';
         req.fileValidationError = 'Неверный тип документа!';
         cb(null, false);
     }
@@ -82,7 +81,6 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
     uploadMsg.file = req.file.filename; 
         
     //  запись в БД имени файла
-    // const sql_insert = `INSERT stends(dept, version, ${req.body.pocket}) VALUES (${req.body.deptId}, '${req.body.stend}', '${newName}');`;
     const sql = `UPDATE stends SET ${req.body.pocket}='${req.file.filename}' WHERE dept=${req.body.deptId} AND version='${req.body.stend}';`;
     try {
         connection.query(sql, (err, results) => {
@@ -148,12 +146,13 @@ router.get('/getactive/:deptId', function(req, res) {
 });
 
 router.post('/setactive', function(req, res) {
-    // sql = удаляем из БД активный
-    // const sql = `DELETE FROM current WHERE dept=${this.currentDept.id} AND activestend = ${this.activeStendId};`
-    //
-    // const stendId = (SELECT id FROM stends WHERE version=${versionTo} AND dept=${this.currentDept.id});
-    // sql = `INSERT INTO 'current' SET dept=${this.currentDept.id}, activestend=${stendId} 
-    // ON DUPLICATE KEY UPDATE activestend=${stendId};`
+    let sql;
+    if (req.body.checked) {
+        sql = `INSERT INTO current (dept,activestend) VALUES (${req.body.dept}, ${req.body.stendId}) 
+        ON DUPLICATE KEY UPDATE activestend=${req.body.stendId};`
+    } else {
+        sql = `DELETE FROM current WHERE dept=${req.body.dept} AND activestend=${req.body.stendId};`
+    }
     try {
         connection.query(sql, (err, results) => {
             if (err) console.log(err);
@@ -189,17 +188,7 @@ router.get('/init', function (req, res) {
         res.send(JSON.stringify(results));
 
     });
-    
 
-    // чтение из файла 
-    // try {
-    //     fs.readFile('data/lean/stends.json', 'utf8', (err, stendData) => {
-    //         res.send(JSON.stringify(stendData));
-    //     });
-
-    // } catch (e) {
-    //     console.log('Ошибка чтения файла stends.json');
-    // }
 });
 
 module.exports = router;
