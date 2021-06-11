@@ -115,7 +115,6 @@ router.post('/upload', upload.single("uploadfile"),  function (req, res, next) {
                     return res.send(err);
                 }
             });
-            
 });
 
 router.post('/new', function(req, res) {
@@ -142,7 +141,6 @@ router.get('/getactive/:deptId', function(req, res) {
         } catch (e) {
             console.log(e);
         }
-
 });
 
 router.post('/setactive', function(req, res) {
@@ -161,12 +159,11 @@ router.post('/setactive', function(req, res) {
         } catch (e) {
             console.log(e);
         }
-
 });
 
 router.get('/getstends/:deptId', function (req, res) {
     const sql = `SELECT * FROM stends WHERE dept=${req.params.deptId};`;
-
+    const ip = req.ip.split(":").pop();
     try {
     connection.query(sql, (err, results) => {
         if (err) console.log(err);
@@ -175,20 +172,19 @@ router.get('/getstends/:deptId', function (req, res) {
     } catch (e) {
         console.log(e);
     }
+});
 
+router.get('/getip', function (req, res) {
+    const ip = req.ip.split(":").pop();
+        res.send(JSON.stringify({'ip': ip}));
 });
 
 router.get('/init', function (req, res) {
-
     const sql = 'SELECT * FROM users;';
-    
     connection.query(sql, (err, results) => {
-        
         if (err) console.log(err);
         res.send(JSON.stringify(results));
-
     });
-
 });
 
 module.exports = router;

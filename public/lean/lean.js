@@ -27,15 +27,21 @@ Vue.component('lean-pocket', {
 });
 Vue.component('lean-footer', {
     template: `<div class="footer">
-                    <p>Версия: {{ this.version }} | {{ this.date }}</p>
-                </div>`,
+        <ul>
+            <li v-if="isadmin">Администратор</li>
+            <li v-if="isadmin">Поддержка</li>
+            <li v-if="isadmin">О приложении</li>
+            <li>Версия: {{ this.version }} | {{ this.date }}</li>
+        </ul>
+    </div>`,
     data() {
         return {
             version: '0.9.0',
             date: '07.06.2021 г.',
             
         }
-    }
+    },
+    props: ['isadmin']
 });
 
 var app = new Vue({
@@ -148,6 +154,8 @@ var app = new Vue({
                         thumb: ''
                     }
     },
+        allowedIp: ['1', '192.168.1.252', '10.80.199.73', '10.80.199.29'],
+        isAdmin: false,
         isAuth: false,
         progress: 0,
         isModalVisible: false,
@@ -182,6 +190,7 @@ var app = new Vue({
                 vm.swModal();
             }
         });
+        
     },
   
     async created() {
@@ -197,9 +206,23 @@ var app = new Vue({
         } else {
             console.log(`Ошибка init: ${response.status}`);
         }
+        this.getip();
         // console.log('created '+ new Date());
     },
     methods: {
+        async getip() {
+            let response = await fetch('/getip');
+            if (response.ok) {
+                let result = await response.json();
+
+                if (result) {
+                    console.log('result.ip: ', result.ip);
+                    this.isAdmin = this.allowedIp.includes(result.ip);
+                }
+            } else {
+                console.log(`Ошибка init: ${response.status}`);
+            }
+        },
         async upload(e) {
             if (this.stends.length === 0) {
                 this.sysmsg = "Для загрузки документов выберите стенд";
