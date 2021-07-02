@@ -3,7 +3,7 @@ Vue.config.devtools = true;
 Vue.component('lean-pocket', {
     template: `<form>
                     
-                    <a :href="pocket.file ? dest + pocket.file : '#'" :target="pocket.file ? '_blank' : ''">
+                    <a :href="pocket.file ? dest + pocket.file : '#'" :target="pocket.file ? '_blank' : ''" >
                         <div :class="[pocket.format, pocket.file ? pocket.bg : pocket.empty]" :style="cssvars">
                             <input type="file" :name="pocket.name" :id="pocket.name" class="upload-file__input" @change="addfile">
                             <label :for="pocket.name" class="upload-file__label">
@@ -26,18 +26,29 @@ Vue.component('lean-pocket', {
     
 });
 Vue.component('lean-footer', {
-    template: `<div class="footer">
-        <ul>
-            <li v-if="isadmin">Администратор</li>
-            <li v-if="isadmin">Поддержка</li>
-            <li v-if="isadmin">О приложении</li>
-            <li>Версия: {{ this.version }} | {{ this.date }}</li>
-        </ul>
-    </div>`,
+    template: `<div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div>Электронный стенд визуального менеджмента программы проектов 
+                        «Бережливое производство в ОАО «РЖД»
+                            </div>
+                            <div>Версия: {{ this.version }} от {{ this.date }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <ul class="footer-menu">
+                                <li><a class="footer-menu__item" v-if="isadmin" href="#">Администратор</a></li>
+                                <li><a class="footer-menu__item" href="#">Разработка и поддержка</a></li>
+                                <li><a class="footer-menu__item" href="#">О приложении</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>`,
     data() {
         return {
-            version: '0.9.0',
-            date: '07.06.2021 г.',
+            version: '0.9.1',
+            date: '02.07.2021 г.',
             
         }
     },
@@ -154,7 +165,7 @@ var app = new Vue({
                         thumb: ''
                     }
     },
-        allowedIp: ['1', '192.168.1.252', '10.80.199.73', '10.80.199.29'],
+        allowedIp: ['1', '192.168.1.251', '10.80.199.73', '10.80.199.29'],
         isAdmin: false,
         isAuth: false,
         progress: 0,
@@ -179,7 +190,8 @@ var app = new Vue({
             }
         },
         readyToUpload() {
-            let ready = !!(Object.keys(this.currentDept).length && this.stends.length && (this.stendVersion && this.stendVersion !== 'promo'));
+            let ready = !!(Object.keys(this.currentDept).length && this.stends.length && (this.stendVersion && this.stendVersion !== 'promo') 
+                            || (this.stendVersion === 'promo' && this.isAdmin === true));
             return ready; 
         }
     },
@@ -216,7 +228,7 @@ var app = new Vue({
                 let result = await response.json();
 
                 if (result) {
-                    console.log('result.ip: ', result.ip);
+                    // console.log('result.ip: ', result.ip);
                     this.isAdmin = this.allowedIp.includes(result.ip);
                 }
             } else {
@@ -420,7 +432,7 @@ var app = new Vue({
                 this.activeStends = []; 
                 body = { dept: this.currentDept.id, stendId: value, checked: false };
                 this.activeStendId = '';
-                this.sysmsg = "У текущего подразделения теперь нет активного стенда";
+                this.sysmsg = "У текущего подразделения теперь нет активного стенда"
             } else {
                 this.activeStends = [];
                 this.activeStends.push(value);

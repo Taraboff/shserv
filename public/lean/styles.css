@@ -193,11 +193,20 @@ section {
     opacity: 1;
 }
 
-.footer {
+footer {
     margin-top: 65px;
-    display: flex;
-    justify-content: center;
     font-size: 0.9em;
+}
+.footer-menu li{
+    list-style-type: none;
+}
+.footer-menu__item {
+    text-decoration: none;
+    color: #555;
+}
+.footer-menu__item:hover {
+    text-decoration: none;
+    color: #111;
 }
 .terminal {
     position: relative;

@@ -72,7 +72,7 @@
                 </li>
 
 
-                <li class="nav-item mx-2 dropdown" v-if="isAuth">
+                <li class="nav-item mx-2 dropdown" v-if="isAuth && (currentDept.code !='PR')">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Версия стенда
@@ -85,6 +85,7 @@
                                     v-model="activeStends"
                                     :value="item.id"
                                     @change="makeStendActive"
+                                    
                                     >
                                 <a class="dropdown-item" 
                                     href="#" 
