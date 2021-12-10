@@ -7,12 +7,12 @@ const mysql = require('mysql2');
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'admin3',
+    password: 'root',
     database: 'mprint'
 });
 
-router.get('/init', function (req, res) {
-    const sql = 'SELECT * FROM users;';
+router.get('/mprintinit', function (req, res) {
+    const sql = 'SELECT * FROM tasks;';
     connection.query(sql, (err, results) => {
         if (err) console.log(err);
         res.send(JSON.stringify(results));
