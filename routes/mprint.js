@@ -3,11 +3,8 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2');
-const bodyParser = require('body-parser');
-// var app = express();
+const formidable = require('formidable');
 
-let jsonParser = bodyParser.json();
-// app.use(bodyParser.json({ type: 'application/*+json' }))
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
@@ -23,30 +20,31 @@ router.get('/mprintinit', function (req, res) {
     });
 });
 
-router.post('/mprintupdate', jsonParser, function (req, res) {
-    let msob = {};
-    // console.log(req);
-    // const body = JSON.parse(req.body);
-    // console.log(body);
-    const userdata = req.body;
-    console.log('userdata: ', userdata);
-
-    // const bd = body ? "body.ok" : "body.not.ok";
-    // console.log('bd: ', bd);
-    // msob.bd = body;
-
-    const sql = `UPDATE tasks SET username='${userdata.id}' WHERE id=1;`;
+router.post('/mprintupdate', function (req, res) {
+    const data = {};
+    const form = formidable({ multiples: true });
     try {
-        connection.query(sql, (err, results) => {
+        form.parse(req, (err, fields) => {
             if (err) {
-                msob.msg = `Ошибка записи в базу данных: ${err}`;
-                console.log(err);
-                return res.send(msob);
-            } 
+                next(err);
+                return;
+            }
+            const sql = `UPDATE tasks SET username='${fields.username}' WHERE id=${fields.id};`;
+            connection.query(sql, (err, results) => {
+                if (err) {
+                    data.msg = `Ошибка записи в базу данных: ${err}`;
+                    console.log(err);
+                    return res.json(data.msg);
+                } else {
+                    data.msg = "Database updated"
+                    res.json(data.msg);
+                }
+            });
         });
     } catch (e) {
         console.log(e, req);
     }
+    
 });
 
 module.exports = router;
