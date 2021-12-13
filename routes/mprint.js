@@ -16,7 +16,7 @@ router.get('/mprintinit', function (req, res) {
     const sql = 'SELECT * FROM tasks;';
     connection.query(sql, (err, results) => {
         if (err) console.log(err);
-        res.send(JSON.stringify(results));
+        res.json(results);
     });
 });
 
@@ -29,7 +29,14 @@ router.post('/mprintupdate', function (req, res) {
                 next(err);
                 return;
             }
-            const sql = `UPDATE tasks SET username='${fields.username}' WHERE id=${fields.id};`;
+            const sql = `UPDATE tasks SET username='${fields.username}',
+                                        printer='${fields.printer}',
+                                        cartridge='${fields.cartridge}',    
+                                        workstatus='${fields.workstatus}',    
+                                        location='${fields.location}',    
+                                        datein='${fields.datein}',    
+                                        comment='${fields.comment}' WHERE id=${fields.id};`;
+
             connection.query(sql, (err, results) => {
                 if (err) {
                     data.msg = `Ошибка записи в базу данных: ${err}`;
