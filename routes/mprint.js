@@ -29,29 +29,54 @@ router.post('/mprintupdate', function (req, res) {
                 next(err);
                 return;
             }
-            const sql = `UPDATE tasks SET username='${fields.username}',
-                                        printer='${fields.printer}',
-                                        cartridge='${fields.cartridge}',    
-                                        workstatus='${fields.workstatus}',    
-                                        location='${fields.location}',    
-                                        datein='${fields.datein}',    
-                                        comment='${fields.comment}' WHERE id=${fields.id};`;
 
+                const sql = `INSERT INTO tasks (id, username, printer, cartridge, workstatus, location, datein, comment) 
+                                    VALUES("${+fields.id}", 
+                                            "${fields.username}", 
+                                            "${fields.printer}", 
+                                            "${fields.cartridge}", 
+                                            "${fields.workstatus}", 
+                                            "${fields.location}", 
+                                            "${fields.datein}", 
+                                            "${fields.comment}")
+                            ON DUPLICATE KEY UPDATE id="${fields.id}",
+                                            username="${fields.username}",
+                                            printer="${fields.printer}", 
+                                            cartridge="${fields.cartridge}", 
+                                            workstatus="${fields.workstatus}", 
+                                            location="${fields.location}",
+                                            datein="${fields.datein}",
+                                            comment="${fields.comment}";`
+      
+            
             connection.query(sql, (err, results) => {
                 if (err) {
                     data.msg = `Ошибка записи в базу данных: ${err}`;
                     console.log(err);
-                    return res.json(data.msg);
+                    return res.send(JSON.stringify(data.msg));
                 } else {
                     data.msg = "Database updated"
-                    res.json(data.msg);
+                    res.send(JSON.stringify(data.msg));
                 }
             });
         });
     } catch (e) {
         console.log(e, req);
     }
-    
+
+});
+router.get('/mprintdelete/:id', function(req, res) {
+    const sql = `DELETE FROM tasks WHERE id=${req.params.id};`;
+    let out = {};
+    try {
+        connection.query(sql, (err, results) => {
+            if (err) console.log(err);
+            out.result = `Удалена запись: ${req.params.id}`;
+            res.send(JSON.stringify(out));
+        });
+        } catch (e) {
+            console.log(e);
+        }
 });
 
 module.exports = router;
