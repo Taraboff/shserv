@@ -8,15 +8,21 @@ const formidable = require('formidable');
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'admin3',
     database: 'mprint'
 });
 
 router.get('/mprintinit', function (req, res) {
     const sql = 'SELECT * FROM tasks;';
+
     connection.query(sql, (err, results) => {
         if (err) console.log(err);
-        res.json(results);
+        res.set({
+            "Access-Control-Allow-Origin": "*",
+        });
+        // const results2 = {"test": "Ready"};
+        // res.send(JSON.stringify(results));
+        res.end(JSON.stringify(results));
     });
 });
 

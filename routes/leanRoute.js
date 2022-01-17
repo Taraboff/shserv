@@ -176,6 +176,10 @@ router.get('/getstends/:deptId', function (req, res) {
 
 router.get('/getip', function (req, res) {
     const ip = req.ip.split(":").pop();
+    res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+    });
         res.send(JSON.stringify({'ip': ip}));
 });
 
