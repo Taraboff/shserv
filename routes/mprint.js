@@ -8,7 +8,7 @@ const formidable = require('formidable');
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'admin3',
+    password: 'root',   // 'root' for DEV   'admin3' for PRODUCTION
     database: 'mprint'
 });
 
