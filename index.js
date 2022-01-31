@@ -1,5 +1,5 @@
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const app = express();
 const fs = require('fs');
 const path = require('path');
@@ -7,9 +7,10 @@ const telRoutes = require('./routes/tel');
 const leanRoutes = require('./routes/leanRoute');
 const mprintRoutes = require('./routes/mprint');
 
+
 const PORT = process.env.PORT || 8182;
 
-// app.use(cors());
+app.use(cors());
 
 app.use(express.json());
 app.use('/tel', express.static(__dirname + '/public' + '/tel'));
