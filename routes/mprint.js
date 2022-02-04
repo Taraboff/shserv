@@ -14,13 +14,26 @@ const connection = mysql.createPool({
 });
 
 router.get('/mprint/init', function(req, res) {
+    const initarr = [];
     const sql_all = 'SELECT * FROM tasks;';
-    // const sql_get_last = 'SELECT datetime FROM logs ORDER BY id DESC LIMIT 0, 1;'
+    const sql_get_last = 'SELECT datetime FROM logs ORDER BY id DESC LIMIT 0, 1;'
 
-    connection.query(sql_all, (err, results) => {
-        if (err) console.log(err);
-        res.end(JSON.stringify(results));
-    });
+    // const promisePool = connection.promise();
+
+    connection.promise().query(sql_get_last)
+    .then( ([rows]) => {
+        // if (err) console.log(err);
+        initarr.push(rows);
+        return;
+    })
+    .then(connection.promise().query(sql_all)
+    .then( ([rows,fields]) => {
+        // if (err) console.log(err);
+        initarr.push(rows);
+        res.end(JSON.stringify(initarr));
+    }));
+    
+    
 
     // res.set({
     //     "Access-Control-Allow-Origin": "*",
